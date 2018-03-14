@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "prestart": "cd frontend && npm install && npm run build && cd ..",
-    "start": "node ./bin/www",
-    "watch": "node_modules/.bin/nodemon ./bin/www"
+    "start": "cross-env NODE_ENV=production node ./bin/www",
+    "watch": "cross-env NODE_ENV=development node_modules/.bin/nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -16,6 +16,7 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
+    "cross-env": "^5.1.4",
     "nodemon": "^1.17.1"
   }
 }
