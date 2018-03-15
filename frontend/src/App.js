@@ -4,8 +4,13 @@ import {Provider} from "react-redux";
 import Main from "./Main";
 import {CssBaseline, MuiThemeProvider} from "material-ui";
 import CustomTheme from "./CustomTheme";
+import {initListeners} from "./Information/Layout/Listeners";
 
 export default class App extends Component {
+
+	componentWillMount() {
+		initListeners()
+	}
 
 	render() {
 		return(
