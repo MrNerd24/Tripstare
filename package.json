@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prestart": "cd frontend && npm install && npm run build && cd ..",
+    "postinstall": "cd frontend && npm install && npm run build && cd ..",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "watch": "cross-env NODE_ENV=development node_modules/.bin/nodemon ./bin/www"
   },
