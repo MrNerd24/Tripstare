@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import {Divider, Drawer, List, ListItem, ListItemIcon, ListItemText} from "material-ui";
+import {Divider, Drawer, List} from "material-ui";
 import {Info as InfoIcon, Directions as DirectionsIcon} from 'material-ui-icons'
-import {Link} from "react-router-dom";
+import DrawerLink from "./DrawerLink";
 
 
 export default class DrawerComponent extends Component {
@@ -13,21 +13,21 @@ export default class DrawerComponent extends Component {
 				open={this.props.open}
 				variant={this.props.permanent ? "permanent" : "temporary"}
 			>
-				<div style={{height: this.props.toolbarHeight}} />
+				<div style={{height: this.props.toolbarHeight, width: 240}} />
 				<Divider/>
 				<List component="nav">
-					<ListItem button component={Link} to="/" onClick={() => this.props.onDrawerStateChange(false)}>
-						<ListItemIcon>
-							<InfoIcon />
-						</ListItemIcon>
-						<ListItemText primary={this.props.language.situation} />
-					</ListItem>
-					<ListItem button component={Link} to="/routes" onClick={() => this.props.onDrawerStateChange(false)}>
-						<ListItemIcon>
-							<DirectionsIcon />
-						</ListItemIcon>
-						<ListItemText primary={this.props.language.routes} />
-					</ListItem>
+					<DrawerLink
+						to="/"
+						onClick={() => this.props.onDrawerStateChange(false)}
+						icon={<InfoIcon />}
+						text={this.props.language.situation}
+					/>
+					<DrawerLink
+						to="/routes"
+						onClick={() => this.props.onDrawerStateChange(false)}
+						icon={<DirectionsIcon />}
+						text={this.props.language.routes}
+					/>
 				</List>
 			</Drawer>
 		)

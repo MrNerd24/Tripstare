@@ -3,6 +3,8 @@ import DrawerComponent from "./DrawerComponent";
 import Actions from "../Actions";
 import {connect} from "react-redux";
 import {withTheme} from "material-ui";
+import {getAppbarHeight} from "./AppBar";
+
 
 export class Drawer extends Component {
 
@@ -13,24 +15,13 @@ export class Drawer extends Component {
 				onDrawerStateChange={this.props.setDrawerState}
 				permanent={this.isPermanent()}
 				language={this.props.language}
-				toolbarHeight={this.getToolBarHeight()}
+				toolbarHeight={getAppbarHeight()}
 			/>
 		)
 	}
 
 	isPermanent() {
-		return this.props.windowWidth >= this.props.theme.breakpoints.values.lg
-	}
-
-	getToolBarHeight() {
-		if (this.props.windowWidth >= this.props.theme.breakpoints.values.sm) {
-			return 64
-		}
-		if (window.matchMedia("(orientation: landscape)").matches) {
-			return 48
-		} else {
-			return 56
-		}
+		return this.props.windowWidth >= 1280
 	}
 }
 
@@ -38,7 +29,7 @@ const mapStateToProps = (state, props) => {
 	return {
 		open: state.navigation.drawerOpen,
 		windowWidth: state.information.layout.width,
-		language: state.information.layout.language
+		language: state.information.layout.language,
 	}
 }
 

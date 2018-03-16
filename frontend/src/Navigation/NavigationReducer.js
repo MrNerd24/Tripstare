@@ -1,5 +1,6 @@
 let initialState = {
-	drawerOpen: false
+	drawerOpen: false,
+	drawerPermanent: false
 }
 
 

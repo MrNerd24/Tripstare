@@ -3,6 +3,8 @@ import AppBarComponent from "./AppBarComponent";
 import Actions from '../Actions'
 import {connect} from "react-redux";
 import {withTheme} from "material-ui";
+import Store from '../Store'
+
 
 export class Appbar extends Component {
 
@@ -33,3 +35,14 @@ const mapdispatchToProps = (dispatch, props) => {
 }
 
 export default connect(mapStateToProps, mapdispatchToProps)(withTheme()(Appbar))
+
+export const getAppbarHeight = () => {
+	if (Store.getState().information.layout.width >= 600) {
+		return 64
+	}
+	if (window.matchMedia("(orientation: landscape)").matches) {
+		return 48
+	} else {
+		return 56
+	}
+}
