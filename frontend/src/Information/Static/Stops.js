@@ -7,8 +7,9 @@ export const getStops = async () => {
 		return stops
 	}
 
-	let query = "{stops {id gtfsId name lat lon}}"
+	let query = "{stops {id gtfsId name desc code platformCode lat lon}}"
 
-	stops = await runQuery(query)
-	return stops.data.stops
+	let result = await runQuery(query)
+	stops = result.data.stops
+	return stops
 }

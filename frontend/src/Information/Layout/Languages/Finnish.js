@@ -4,7 +4,10 @@ export default {
 	routes: "Reitit",
 
 	// routes
-	startStop: "Alku pysäkki",
-	endStop: "Loppu pysäkki",
+	startStop: "Alkupysäkki",
+	endStop: "Loppupysäkki",
+	save: "Tallenna",
+	cancel: "Peruuta",
+	editRoute: "Muokkaa reittiä"
 
 }

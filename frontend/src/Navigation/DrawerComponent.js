@@ -13,7 +13,7 @@ export default class DrawerComponent extends Component {
 				open={this.props.open}
 				variant={this.props.permanent ? "permanent" : "temporary"}
 			>
-				<div style={{height: this.props.toolbarHeight, width: 240}} />
+				<div style={{height: this.props.toolbarHeight, width: 240, maxWidth:"95%"}} />
 				<Divider/>
 				<List component="nav">
 					<DrawerLink

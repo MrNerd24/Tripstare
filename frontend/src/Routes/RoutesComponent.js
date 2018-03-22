@@ -10,9 +10,14 @@ export default class RoutesComponent extends Component {
 			<Container>
 				<EditableRoute
 					startStops={this.props.startStops}
+
 					language={this.props.language}
-					startStop={this.props.startStops[0].value}
+
+					startStop={this.props.startStops[0]}
+					endStop={this.props.startStops[100]}
+
 					onStartStopChange={this.props.onStartStopChange}
+					onEndStopChange={this.props.onStartStopChange}
 				/>
 			</Container>
 		)

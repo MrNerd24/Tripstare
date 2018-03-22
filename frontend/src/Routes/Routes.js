@@ -23,9 +23,15 @@ export class Routes extends Component {
 	}
 
 	formatStop(stop) {
+		let code = stop.code ? stop.code + " " : "";
+		let name = stop.name ? stop.name + " " : "";
+		let platformCode = stop.platformCode ? stop.platformCode + " " : "";
+		let desc = stop.desc ? stop.desc : "";
+
 		return {
 			value: stop.id,
-			text: stop.name
+			text: `${code}${name}${platformCode}${desc}`,
+			code, name, platformCode, desc
 		}
 	}
 

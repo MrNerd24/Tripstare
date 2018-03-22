@@ -7,7 +7,6 @@ import {connect} from "react-redux";
 export class Router extends Component {
 
 	render() {
-		console.log("router rendered")
 		return(
 			<div style={{marginLeft:this.props.drawerWidth}}>
 				<Route exact path="/" render={() => <Situation/>} />
