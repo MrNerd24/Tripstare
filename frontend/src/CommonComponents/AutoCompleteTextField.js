@@ -19,7 +19,7 @@ export default class AutoCompleteTextField extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.value.text !== this.lastValue) {
+		if(props.value && props.value.text !== this.lastValue) {
 			this.lastValue = props.value.text
 			this.setState({
 				value: this.lastValue

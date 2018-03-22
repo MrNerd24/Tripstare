@@ -8,6 +8,20 @@ export default class RoutesComponent extends Component {
 	render() {
 		return(
 			<Container>
+				{this.props.routes.map((route) =>
+					<EditableRoute
+
+						startStop={route.startStop}
+						onStartStopChange={(stopId) => this.props.onStartStopChange(route, stopId)}
+
+						endStop={route.endStop}
+						onEndStopChange={(stopId) => this.props.onEndStopChangae(route, stopId)}
+
+						language={this.props.language}
+						onSaveClick={() => this.props.onSaveClick(route)}
+						onCancelClick={() => this.props.onCancelClick(route)}
+					/>
+				)}
 				<EditableRoute
 					startStops={this.props.startStops}
 

@@ -13,3 +13,7 @@ export const getStops = async () => {
 	stops = result.data.stops
 	return stops
 }
+
+export const getConnectedStop = async (stopId) => {
+
+}

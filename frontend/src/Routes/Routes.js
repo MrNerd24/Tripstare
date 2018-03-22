@@ -12,7 +12,8 @@ export class Routes extends Component {
 			startStops: [{
 				value: "0",
 				text: "Loading"
-			}]
+			}],
+
 		}
 	}
 
@@ -35,22 +36,28 @@ export class Routes extends Component {
 		}
 	}
 
+	handleStartStopChange = (route, stopId) => {
+		console.log(stopId)
+	}
+
 	render() {
 		return(
 			<RoutesComponent
 				language={this.props.language}
 				startStops={this.state.startStops}
-				onStartStopChange={(id) => console.log(id)}
+				routes={this.props.routes}
+
+				onStartStopChange={this.handleStartStopChange}
 			/>
 		)
 	}
-
 
 }
 
 const mapStateToProps = (state, props) => {
 	return {
-		language: state.information.layout.language
+		language: state.information.layout.language,
+		routes: state.routes
 	}
 }
 
