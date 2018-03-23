@@ -1,14 +1,27 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+let express = require('express');
+let path = require('path');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let mongoose = require('mongoose')
+let https = require("https")
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+let index = require('./Routes/index');
+let users = require('./Routes/users');
+let config = require('./utils/config')
 
-var app = express();
+let app = express();
 
+const extractToken = (request, response, next) => {
+	const authorization = request.get('authorization')
+	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+		request.token = authorization.substring(7)
+	}
+
+	next()
+}
+
+app.use(extractToken)
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -17,6 +30,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+mongoose.connect(config.mongoUrl)
+mongoose.Promise = global.Promise
 
 
 app.use(express.static('frontend/build'))
@@ -39,7 +56,10 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send('error');
 });
 
-module.exports = app;
+
+
+module.exports = app
+

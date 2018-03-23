@@ -3,7 +3,7 @@ export default {
 	situation: "Tilanne",
 	routes: "Reitit",
 
-	// routes
+	// Routes
 	startStop: "Alkupysäkki",
 	endStop: "Loppupysäkki",
 	save: "Tallenna",
@@ -17,6 +17,10 @@ export default {
 	orSignupHere: "Tai rekisteröidy täällä",
 	username: "Käyttäjätunnus",
 	password: "Salasana",
-	passwordAgain: "Salasana uudestaan"
+	passwordAgain: "Salasana uudestaan",
+	passwordTooShort: "Salasanan on oltava yli 4 kirjainta pitkä.",
+	passwordsDontMatch: "Salasanat eivät täsmää.",
+	usernameBeingChecked: "Tarkistetaan käyttäjätunnusta.",
+	usernameTaken: "Käyttäjätunnus on jo varattu."
 
 }

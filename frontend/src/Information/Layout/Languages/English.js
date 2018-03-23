@@ -3,7 +3,7 @@ export default {
 	situation: "Situation",
 	routes: "Routes",
 
-	// routes
+	// Routes
 	startStop: "Start stop",
 	endStop: "End stop",
 	save: "Save",
@@ -17,7 +17,11 @@ export default {
 	orSignupHere: "Or sign up here",
 	username: "Username",
 	password: "Password",
-	passwordAgain: "Password again"
+	passwordAgain: "Password again",
+	passwordTooShort: "Password needs to be over 4 letters long.",
+	passwordsDontMatch: "Passwords don't match,",
+	usernameBeingChecked: "Checking username.",
+	usernameTaken: "Username already taken."
 
 
 
