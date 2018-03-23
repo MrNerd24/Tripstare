@@ -9,6 +9,14 @@ export default {
 	save: "Tallenna",
 	cancel: "Peruuta",
 	delete: "Poista",
-	editRoute: "Muokkaa reittiä"
+	editRoute: "Muokkaa reittiä",
+
+	// user
+	signup: "Rekisteröidy",
+	login: "Kirjaudu sisään",
+	orSignupHere: "Tai rekisteröidy täällä",
+	username: "Käyttäjätunnus",
+	password: "Salasana",
+	passwordAgain: "Salasana uudestaan"
 
 }

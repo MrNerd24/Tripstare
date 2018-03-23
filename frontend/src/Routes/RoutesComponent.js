@@ -5,6 +5,7 @@ import {routes} from "../CommonPropTypes";
 import PropTypes from 'prop-types'
 import {Button} from "material-ui";
 import {Add as AddIcon} from 'material-ui-icons'
+import Container from "../CommonComponents/Container";
 
 
 export default class RoutesComponent extends Component {
@@ -40,11 +41,6 @@ export default class RoutesComponent extends Component {
 
 }
 
-let Container = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-`
 
 let CornerButtonContainer = styled.div`
 	position: fixed;

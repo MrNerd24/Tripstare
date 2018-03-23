@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Divider, Drawer, List} from "material-ui";
 import {Info as InfoIcon, Directions as DirectionsIcon} from 'material-ui-icons'
 import DrawerLink from "./DrawerLink";
+import DrawerUserLink from "../User/DrawerUserLink";
 
 
 export default class DrawerComponent extends Component {
@@ -28,6 +29,7 @@ export default class DrawerComponent extends Component {
 						icon={<DirectionsIcon />}
 						text={this.props.language.routes}
 					/>
+					<DrawerUserLink/>
 				</List>
 			</Drawer>
 		)

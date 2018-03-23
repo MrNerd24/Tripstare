@@ -3,6 +3,8 @@ import {Route, withRouter} from "react-router-dom";
 import Situation from "../Situation/Situation";
 import Routes from "../Routes/Routes";
 import {connect} from "react-redux";
+import LoginForm from "../User/LoginForm";
+import CreateUserForm from "../User/CreateUserForm";
 
 export class Router extends Component {
 
@@ -11,6 +13,8 @@ export class Router extends Component {
 			<div style={{marginLeft:this.props.drawerWidth}}>
 				<Route exact path="/" render={() => <Situation/>} />
 				<Route exact path="/routes" render={() => <Routes/>}/>
+				<Route exact path="/login" render={()=> <LoginForm/>}/>
+				<Route exact path="/signup" render={()=> <CreateUserForm/>}/>
 			</div>
 		)
 	}

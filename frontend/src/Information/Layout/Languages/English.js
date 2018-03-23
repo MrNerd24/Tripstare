@@ -9,7 +9,16 @@ export default {
 	save: "Save",
 	cancel: "Cancel",
 	delete: "Delete",
-	editRoute: "Edit route"
+	editRoute: "Edit route",
+
+	// user
+	signup: "Sign up",
+	login: "Login",
+	orSignupHere: "Or sign up here",
+	username: "Username",
+	password: "Password",
+	passwordAgain: "Password again"
+
 
 
 }

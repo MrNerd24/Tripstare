@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {getConnectedStops, getStops} from "../Information/Static/Stops";
 import {stop} from '../CommonPropTypes'
+import ButtonContainer from "../CommonComponents/ButtonContainer";
 
 
 export default class EditableRoute extends Component {
@@ -63,11 +64,6 @@ export default class EditableRoute extends Component {
 
 }
 
-let ButtonContainer = styled.div`
-	display: flex;
-	flex-direction: row;
-	margin-top: 20px;
-`
 
 EditableRoute.propTypes = {
 	startStop: stop,
