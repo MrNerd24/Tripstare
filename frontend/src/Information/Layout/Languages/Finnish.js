@@ -8,6 +8,7 @@ export default {
 	endStop: "Loppupysäkki",
 	save: "Tallenna",
 	cancel: "Peruuta",
+	delete: "Poista",
 	editRoute: "Muokkaa reittiä"
 
 }

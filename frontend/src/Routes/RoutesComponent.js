@@ -1,6 +1,10 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
 import EditableRoute from "./EditableRoute";
+import {routes} from "../CommonPropTypes";
+import PropTypes from 'prop-types'
+import {Button} from "material-ui";
+import {Add as AddIcon} from 'material-ui-icons'
 
 
 export default class RoutesComponent extends Component {
@@ -10,29 +14,26 @@ export default class RoutesComponent extends Component {
 			<Container>
 				{this.props.routes.map((route) =>
 					<EditableRoute
+						key={route.id}
 
 						startStop={route.startStop}
 						onStartStopChange={(stopId) => this.props.onStartStopChange(route, stopId)}
 
 						endStop={route.endStop}
-						onEndStopChange={(stopId) => this.props.onEndStopChangae(route, stopId)}
+						onEndStopChange={(stopId) => this.props.onEndStopChange(route, stopId)}
 
 						language={this.props.language}
 						onSaveClick={() => this.props.onSaveClick(route)}
 						onCancelClick={() => this.props.onCancelClick(route)}
+						onDeleteClick={() => this.props.onDeleteClick(route)}
 					/>
 				)}
-				<EditableRoute
-					startStops={this.props.startStops}
+				<CornerButtonContainer>
+					<Button variant="fab" color="primary" onClick={this.props.onAddClick}>
+						<AddIcon />
+					</Button>
+				</CornerButtonContainer>
 
-					language={this.props.language}
-
-					startStop={this.props.startStops[0]}
-					endStop={this.props.startStops[100]}
-
-					onStartStopChange={this.props.onStartStopChange}
-					onEndStopChange={this.props.onStartStopChange}
-				/>
 			</Container>
 		)
 	}
@@ -44,3 +45,21 @@ let Container = styled.div`
 	flex-direction: column;
 	align-items: center;
 `
+
+let CornerButtonContainer = styled.div`
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+`
+
+RoutesComponent.propTypes = {
+	routes: routes,
+	onStartStopChange: PropTypes.func.isRequired,
+	onEndStopChange: PropTypes.func.isRequired,
+
+	language: PropTypes.object.isRequired,
+	onSaveClick: PropTypes.func.isRequired,
+	onCancelClick: PropTypes.func.isRequired,
+	onDeleteClick: PropTypes.func.isRequired,
+	onAddClick: PropTypes.func.isRequired,
+}

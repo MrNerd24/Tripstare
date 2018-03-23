@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from "react-redux";
 import RoutesComponent from "./RoutesComponent";
 import {getStops} from "../Information/Static/Stops";
+import {addRoute} from "./RoutesActions";
 
 export class Routes extends Component {
 
@@ -18,36 +19,52 @@ export class Routes extends Component {
 	}
 
 	async componentWillMount() {
-		let stops = await getStops();
-		console.log(stops)
-		this.setState({startStops: (stops).map(this.formatStop)})
+
 	}
 
-	formatStop(stop) {
-		let code = stop.code ? stop.code + " " : "";
-		let name = stop.name ? stop.name + " " : "";
-		let platformCode = stop.platformCode ? stop.platformCode + " " : "";
-		let desc = stop.desc ? stop.desc : "";
-
-		return {
-			value: stop.id,
-			text: `${code}${name}${platformCode}${desc}`,
-			code, name, platformCode, desc
-		}
-	}
 
 	handleStartStopChange = (route, stopId) => {
+		console.log(route)
 		console.log(stopId)
+	}
+
+	handleEndStopChange = (route, stopId) => {
+
+	}
+
+	handleSaveClick = (route) => {
+
+	}
+
+	handleCancelClick = (route) => {
+
+	}
+
+	handleDeleteClick = (route) => {
+
+	}
+
+	handleAddClick = () => {
+		let route = {
+			startStop: null,
+			endStop: null,
+		}
+
+		this.props.addRoute(route)
 	}
 
 	render() {
 		return(
 			<RoutesComponent
 				language={this.props.language}
-				startStops={this.state.startStops}
 				routes={this.props.routes}
 
 				onStartStopChange={this.handleStartStopChange}
+				onEndStopChange={this.handleEndStopChange}
+				onSaveClick={this.handleSaveClick}
+				onCancelClick={this.handleCancelClick}
+				onDeleteClick={this.handleDeleteClick}
+				onAddClick={this.handleAddClick}
 			/>
 		)
 	}
@@ -63,7 +80,7 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = (dispatch, props) => {
 	return {
-
+		addRoute: (route) => dispatch(addRoute(route))
 	}
 }
 

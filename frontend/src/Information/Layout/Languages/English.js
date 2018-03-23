@@ -8,6 +8,7 @@ export default {
 	endStop: "End stop",
 	save: "Save",
 	cancel: "Cancel",
+	delete: "Delete",
 	editRoute: "Edit route"
 
 
