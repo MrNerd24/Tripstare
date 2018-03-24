@@ -37,7 +37,7 @@ export default class LoginFormComponent extends Component {
 						}
 					/>
 					<ButtonContainer>
-						<Button onClick={this.props.onLoginClick} color="primary">
+						<Button onClick={this.props.onLoginClick} color="secondary">
 							{this.props.language.login}
 						</Button>
 					</ButtonContainer>

@@ -7,11 +7,12 @@ export const getStops = async () => {
 	if (stops) {
 		return stops
 	}
-
-	let query = "{stops {gtfsId name desc code platformCode lat lon}}"
-
-	let result = await runQuery(query)
-	stops = result.data.stops.map(formatStop)
+	stops = new Promise((resolve, reject) => {
+		let query = "{stops {gtfsId name desc code platformCode lat lon}}"
+		runQuery(query).then((result) => {
+			resolve(result.data.stops.map(formatStop))
+		})
+	})
 	return stops
 }
 

@@ -39,7 +39,7 @@ export default class CreateUserFormComponent extends Component {
 						helperText={!this.props.passwordsMatch ? this.props.language.passwordsDontMatch : null}
 					/>
 					<ButtonContainer>
-						<Button onClick={this.props.onSignupClick} color="primary">
+						<Button onClick={this.props.onSignupClick} color="secondary">
 							{this.props.language.signup}
 						</Button>
 					</ButtonContainer>

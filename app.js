@@ -34,9 +34,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect(config.mongoUrl)
 mongoose.Promise = global.Promise
 
+
 app.use('/api/users', users);
 app.use('/api/routes', routes)
-app.use(express.static('./frontend/build'))
+process.env.PWD = process.cwd();
+app.use('/',express.static(path.join(process.env.PWD, 'frontend/public')));
 
 
 

@@ -49,7 +49,7 @@ export default class EditableRoute extends Component {
 				/>
 
 				<ButtonContainer>
-					<Button onClick={this.props.onSaveClick} color="primary">
+					<Button onClick={this.props.onSaveClick} color="secondary">
 						{this.props.language.save}
 					</Button>
 					<Button onClick={this.props.onCancelClick}>

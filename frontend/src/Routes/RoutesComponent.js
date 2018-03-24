@@ -30,7 +30,7 @@ export default class RoutesComponent extends Component {
 					/>
 				)}
 				<CornerButtonContainer>
-					<Button variant="fab" color="primary" onClick={this.props.onAddClick}>
+					<Button variant="fab" color="secondary" onClick={this.props.onAddClick}>
 						<AddIcon />
 					</Button>
 				</CornerButtonContainer>
