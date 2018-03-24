@@ -36,7 +36,7 @@ mongoose.Promise = global.Promise
 
 app.use('/api/users', users);
 app.use('/api/routes', routes)
-app.use(express.static('frontend/build'))
+app.use(express.static('./frontend/build'))
 
 
 
