@@ -9,7 +9,7 @@ let https = require("https")
 let index = require('./Routes/index');
 let users = require('./Routes/users');
 let routes = require("./Routes/routes")
-let config = require('./utils/config')
+let config = require('./Utils/Config')
 
 let app = express();
 
