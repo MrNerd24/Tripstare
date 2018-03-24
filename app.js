@@ -5,6 +5,7 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose')
 let https = require("https")
+let fallback = require('express-history-api-fallback')
 
 let index = require('./Routes/index');
 let users = require('./Routes/users');
@@ -38,8 +39,9 @@ mongoose.Promise = global.Promise
 app.use('/api/users', users);
 app.use('/api/routes', routes)
 process.env.PWD = process.cwd();
-app.use('/',express.static(path.join(process.env.PWD, 'frontend/build')));
-
+let root = path.join(process.env.PWD, 'frontend/build');
+app.use(express.static(root));
+app.use(fallback('index.html', {root}))
 
 
 // catch 404 and forward to error handler
