@@ -1,6 +1,6 @@
 {
   "name": "tripstare",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "postinstall": "cd frontend && npm install && npm run build && cd ..",
@@ -22,5 +22,9 @@
   "devDependencies": {
     "cross-env": "^5.1.4",
     "nodemon": "^1.17.1"
+  },
+  "engines": {
+    "node": "8.9.4",
+    "npm": "5.6.0"
   }
 }
