@@ -13,7 +13,8 @@ export const setLanguage = (language) => {
 	return async (dispatch) => {
 		dispatch({
 			type: "SET_LANGUAGE",
-			language: Languages[language]
+			language: Languages[language],
+			languageValue: language
 		})
 	}
 }

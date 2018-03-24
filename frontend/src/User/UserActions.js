@@ -12,7 +12,7 @@ export const setUser = (user) => {
 		if(user) {
 			routes = await Promise.all(user.routes.map(mapStartAndEndStopIdsToObjects))
 		} else {
-			routes = await Promise.all(RoutesLocalDao.getRoutes().map(mapStartAndEndStopIdsToObjects))
+			routes = await Promise.all((await RoutesLocalDao.getRoutes()).map(mapStartAndEndStopIdsToObjects))
 		}
 		dispatch({
 			type: "SET_ROUTES",

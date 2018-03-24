@@ -4,6 +4,7 @@ import LoginFormComponent from "./LoginFormComponent";
 import {loginWithUsernameAndPassword} from "./UserServerDao";
 import Actions from "../Actions";
 import {notify} from "../Information/Layout/Notification";
+import LocalForage from 'localforage'
 
 export class LoginForm extends Component {
 
@@ -13,7 +14,7 @@ export class LoginForm extends Component {
 		this.state={
 			username: "",
 			password: "",
-
+			stayLoggedIn: false
 		}
 	}
 
@@ -21,6 +22,9 @@ export class LoginForm extends Component {
 		let user = await loginWithUsernameAndPassword(this.state.username, this.state.password)
 		if(user.username) {
 			this.props.setUser(user)
+			if(this.state.stayLoggedIn) {
+				LocalForage.setItem("token", user.token)
+			}
 			this.props.history.push("/")
 		} else {
 			if(user.status === 401) {
@@ -42,6 +46,9 @@ export class LoginForm extends Component {
 
 				onUsernameChange={(event) => this.setState({username: event.target.value})}
 				onPasswordChange={(event) => this.setState({password: event.target.value})}
+
+				stayLoggedIn={this.state.stayLoggedIn}
+				onStayLoggedInChange={(event) => this.setState({stayLoggedIn: event.target.checked})}
 
 				onLoginClick={this.handleLoginClick}
 			/>

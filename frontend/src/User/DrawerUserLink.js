@@ -7,14 +7,26 @@ import {connect} from "react-redux";
 export class DrawerUserLink extends Component {
 
 	render() {
-		return(
-			<DrawerLink
-				to="/login"
-				onClick={() => this.props.setDrawerState(false)}
-				icon={<ProfileIcon />}
-				text={this.props.language.login}
-			/>
-		)
+		if(this.props.user.loggedIn) {
+			return(
+				<DrawerLink
+					to="/profile"
+					onClick={() => this.props.setDrawerState(false)}
+					icon={<ProfileIcon />}
+					text={this.props.user.info.username}
+				/>
+			)
+		} else {
+			return(
+				<DrawerLink
+					to="/login"
+					onClick={() => this.props.setDrawerState(false)}
+					icon={<ProfileIcon />}
+					text={this.props.language.login}
+				/>
+			)
+		}
+
 	}
 
 }
@@ -22,6 +34,7 @@ export class DrawerUserLink extends Component {
 const mapStateToProps = (state, props) => {
 	return {
 		language: state.information.layout.language,
+		user: state.user
 	}
 }
 

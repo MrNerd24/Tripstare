@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {InputLabel, MenuItem, Select} from "material-ui";
+import {InputLabel, MenuItem, Select, TextField} from "material-ui";
 import PropTypes from 'prop-types'
 
 
@@ -8,15 +8,15 @@ export default class Selector extends Component {
 	render() {
 		return(
 			<div>
-				<InputLabel>{this.props.label}</InputLabel>
-				<Select
-					value={this.props.value}
-					onChange={this.props.onChange}
+				<TextField
+					{...this.props}
+					select
+					onChange={(event) => {this.props.onChange(event.target.value)}}
 				>
 					{this.props.data.map((data) =>
 						<MenuItem key={data.value} value={data.value}>{data.text}</MenuItem>
 					)}
-				</Select>
+				</TextField>
 			</div>
 
 
@@ -32,6 +32,6 @@ Selector.propTypes = {
 	data: PropTypes.arrayOf(PropTypes.shape({
 		value: PropTypes.string,
 		text: PropTypes.string
-	}))
+	})).isRequired
 }
 

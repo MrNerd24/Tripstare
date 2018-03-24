@@ -25,6 +25,17 @@ export const loginWithUsernameAndPassword = async (username, password) => {
 	}
 }
 
+export const loginWithToken = async (token) => {
+	try{
+		let result = await Axios.post("/api/users/login",null, {headers: {"authorization" : "bearer " + token}})
+		return result.data
+	} catch (e) {
+		if(e.response) {
+			return e.response.data
+		}
+	}
+}
+
 export const usernameExists = async (username) => {
 	try{
 		let data = {username}
@@ -33,4 +44,15 @@ export const usernameExists = async (username) => {
 	} catch (e) {
 		console.log(e)
 	}
+}
+
+export const setUserLanguage = async (language, token) => {
+	try{
+		let data = {language}
+		Axios.post("/api/users/language",data, {headers: {"authorization" : "bearer " + token}})
+	} catch (e) {
+		console.log(e)
+	}
+
+
 }

@@ -86,4 +86,26 @@ router.post("/login", async (request, response) => {
 	}
 })
 
+router.post("/language", async (request, response) => {
+	try{
+		if(request.token) {
+			let username = jwt.verify(request.token, process.env.SECRET)
+			let user = await User.findOne({username})
+			if(user) {
+				let language = request.body.language
+				user.language = language
+				user.save()
+				response.status(204).send()
+			} else {
+				response.status(400).json({error: "Bad token", status: 400})
+			}
+		} else {
+			response.status(400).json({error: "Token missing", status: 400})
+		}
+	} catch (e) {
+		console.log(e)
+		response.status(500).json({error: "Something went wrong...", status:500})
+	}
+})
+
 module.exports = router;

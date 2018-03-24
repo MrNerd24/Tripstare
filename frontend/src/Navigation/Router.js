@@ -5,6 +5,7 @@ import Routes from "../Routes/Routes";
 import {connect} from "react-redux";
 import LoginForm from "../User/LoginForm";
 import CreateUserForm from "../User/CreateUserForm";
+import Profile from "../User/Profile";
 
 export class Router extends Component {
 
@@ -15,6 +16,7 @@ export class Router extends Component {
 				<Route exact path="/routes" render={() => <Routes/>}/>
 				<Route exact path="/login" render={({history})=> <LoginForm history={history}/>}/>
 				<Route exact path="/signup" render={({history})=> <CreateUserForm history={history}/>}/>
+				<Route exact path="/profile" render={({history}) => <Profile history={history}/>}/>
 			</div>
 		)
 	}

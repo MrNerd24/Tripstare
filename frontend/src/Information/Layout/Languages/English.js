@@ -14,6 +14,8 @@ export default {
 	// user
 	signup: "Sign up",
 	login: "Login",
+	logout: "Logout",
+	stayLoggedIn: "Stay logged in",
 	orSignupHere: "Or sign up here",
 	username: "Username",
 	password: "Password",
@@ -24,6 +26,9 @@ export default {
 	usernameTaken: "Username already taken.",
 	fixForm: "Please fill the form correctly",
 	badUsernameOrPassword: "Invalid username or password",
+	language: "Language",
+	english: "English",
+	finnish: "Finnish"
 
 
 
