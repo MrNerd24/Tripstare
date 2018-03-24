@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from "react-redux";
 import CreateUserFormComponent from "./CreateUserFormComponent";
-import {usernameExists} from "./UserServerDao";
+import {createUser, usernameExists} from "./UserServerDao";
 import Actions from '../Actions'
+import {notify} from "../Information/Layout/Notification";
 
 export class CreateUserForm extends Component {
 
@@ -64,10 +65,25 @@ export class CreateUserForm extends Component {
 		}
 	}
 
-	handleSignupClick = () => {
-		if(!this.state.passwordTooShort && this.state.passwordsMatch && !this.state.usernameTaken) {
-			this.props.addUser(this.state.username, this.state.password)
-			this.setState({username: "", password: "", passwordAgain: "", passwordTooShort: false, usernameTaken: false, passwordsMatch: true})
+	handleSignupClick = async () => {
+		if(this.state.username && this.state.password && this.state.passwordAgain && !this.state.passwordTooShort && this.state.passwordsMatch && !this.state.usernameTaken) {
+			let user = await createUser(this.state.username, this.state.password)
+			if (user.username) {
+				this.props.setUser(user)
+				this.setState({
+					username: "",
+					password: "",
+					passwordAgain: "",
+					passwordTooShort: false,
+					usernameTaken: false,
+					passwordsMatch: true
+				})
+				this.history.push("/")
+			} else {
+				notify(user.error)
+			}
+		} else {
+			notify(this.props.language.fixForm)
 		}
 	}
 
@@ -99,12 +115,13 @@ export class CreateUserForm extends Component {
 const mapStateToProps = (state,props) => {
 	return {
 		language: state.information.layout.language,
+		history: props.history
 	}
 }
 
 const mapDispatchToProps = (dispatch,props) => {
 	return {
-		addUser: (username, password) => {dispatch(Actions.addUser(username, password))}
+		setUser: (user) => {dispatch(Actions.setUser(user))}
 	}
 }
 

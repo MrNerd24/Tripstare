@@ -6,9 +6,23 @@ export const createUser = async (username, password) => {
 		let result = await Axios.post("/api/users", data)
 		return result.data
 	} catch (e) {
-		console.log(e)
+		if(e.response) {
+			return e.response.data
+		}
 	}
 
+}
+
+export const loginWithUsernameAndPassword = async (username, password) => {
+	try{
+		let data={username, password}
+		let result = await Axios.post("/api/users/login", data)
+		return result.data
+	} catch (e) {
+		if(e.response) {
+			return e.response.data
+		}
+	}
 }
 
 export const usernameExists = async (username) => {

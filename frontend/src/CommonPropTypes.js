@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-export const stop = PropTypes.shape({
+export const Stop = PropTypes.shape({
 	gtfsId: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	platformCode: PropTypes.string,
@@ -10,12 +10,12 @@ export const stop = PropTypes.shape({
 	value: PropTypes.string
 })
 
-export const stops = PropTypes.arrayOf(stop)
+export const Stops = PropTypes.arrayOf(Stop)
 
-export const route = PropTypes.shape({
-	startStop: stop,
-	endStop: stop,
+export const Route = PropTypes.shape({
+	startStop: Stop,
+	endStop: Stop,
 	id: PropTypes.string.isRequired
 })
 
-export const routes = PropTypes.arrayOf(route)
+export const routes = PropTypes.arrayOf(Route)

@@ -13,8 +13,8 @@ export class Router extends Component {
 			<div style={{marginLeft:this.props.drawerWidth}}>
 				<Route exact path="/" render={() => <Situation/>} />
 				<Route exact path="/routes" render={() => <Routes/>}/>
-				<Route exact path="/login" render={()=> <LoginForm/>}/>
-				<Route exact path="/signup" render={()=> <CreateUserForm/>}/>
+				<Route exact path="/login" render={({history})=> <LoginForm history={history}/>}/>
+				<Route exact path="/signup" render={({history})=> <CreateUserForm history={history}/>}/>
 			</div>
 		)
 	}

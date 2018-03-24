@@ -8,6 +8,7 @@ let https = require("https")
 
 let index = require('./Routes/index');
 let users = require('./Routes/users');
+let routes = require("./Routes/routes")
 let config = require('./utils/config')
 
 let app = express();
@@ -39,6 +40,7 @@ mongoose.Promise = global.Promise
 app.use(express.static('frontend/build'))
 // app.use('/', index);
 app.use('/api/users', users);
+app.use('/api/routes', routes)
 
 
 // catch 404 and forward to error handler

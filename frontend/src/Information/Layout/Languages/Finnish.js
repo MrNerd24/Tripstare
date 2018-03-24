@@ -21,6 +21,8 @@ export default {
 	passwordTooShort: "Salasanan on oltava yli 4 kirjainta pitkä.",
 	passwordsDontMatch: "Salasanat eivät täsmää.",
 	usernameBeingChecked: "Tarkistetaan käyttäjätunnusta.",
-	usernameTaken: "Käyttäjätunnus on jo varattu."
+	usernameTaken: "Käyttäjätunnus on jo varattu.",
+	fixForm: "Täytä lomakke oikein.",
+	badUsernameOrPassword: "Väärä käyttäjätunnus tai salasana",
 
 }

@@ -4,8 +4,8 @@ export default {
 	routes: "Routes",
 
 	// Routes
-	startStop: "Start stop",
-	endStop: "End stop",
+	startStop: "Start Stop",
+	endStop: "End Stop",
 	save: "Save",
 	cancel: "Cancel",
 	delete: "Delete",
@@ -21,7 +21,10 @@ export default {
 	passwordTooShort: "Password needs to be over 4 letters long.",
 	passwordsDontMatch: "Passwords don't match,",
 	usernameBeingChecked: "Checking username.",
-	usernameTaken: "Username already taken."
+	usernameTaken: "Username already taken.",
+	fixForm: "Please fill the form correctly",
+	badUsernameOrPassword: "Invalid username or password",
+
 
 
 

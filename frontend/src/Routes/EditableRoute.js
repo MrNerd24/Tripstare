@@ -3,9 +3,8 @@ import {Button, Typography} from "material-ui";
 import Card from "../CommonComponents/Card";
 import AutoCompleteTextField from "../CommonComponents/AutoCompleteTextField";
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import {Stop} from '../CommonPropTypes'
 import {getConnectedStops, getStops} from "../Information/Static/Stops";
-import {stop} from '../CommonPropTypes'
 import ButtonContainer from "../CommonComponents/ButtonContainer";
 
 
@@ -22,6 +21,9 @@ export default class EditableRoute extends Component {
 
 	async componentWillMount() {
 		this.setState({startStops: await getStops()})
+		if(this.props.startStop) {
+			this.setState({endStops: await getConnectedStops(this.props.startStop.gtfsId)})
+		}
 	}
 
 	handleStartStopChange = async (stopId) => {
@@ -66,10 +68,10 @@ export default class EditableRoute extends Component {
 
 
 EditableRoute.propTypes = {
-	startStop: stop,
+	startStop: Stop,
 	onStartStopChange: PropTypes.func.isRequired,
 
-	endStop: stop,
+	endStop: Stop,
 	onEndStopChange: PropTypes.func.isRequired,
 
 	language: PropTypes.object.isRequired,

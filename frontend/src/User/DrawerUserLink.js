@@ -3,7 +3,6 @@ import DrawerLink from "../Navigation/DrawerLink";
 import {Person as ProfileIcon} from 'material-ui-icons'
 import Actions from "../Actions";
 import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
 
 export class DrawerUserLink extends Component {
 

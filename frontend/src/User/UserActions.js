@@ -1,12 +1,23 @@
-import {createUser} from "./UserServerDao";
+import RoutesLocalDao from "../Routes/RoutesLocalDao";
+import {mapStartAndEndStopIdsToObjects} from "./UserFunctions";
 
 
-export const addUser = (username, password) => {
+export const setUser = (user) => {
 	return async (dispatch) => {
-		let user = await createUser(username, password)
 		dispatch({
 			type: "SET_USER_INFO",
 			info: user
 		})
+		let routes
+		if(user) {
+			routes = await Promise.all(user.routes.map(mapStartAndEndStopIdsToObjects))
+		} else {
+			routes = await Promise.all(RoutesLocalDao.getRoutes().map(mapStartAndEndStopIdsToObjects))
+		}
+		dispatch({
+			type: "SET_ROUTES",
+			routes
+		})
+
 	}
 }

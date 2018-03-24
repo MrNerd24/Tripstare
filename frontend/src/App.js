@@ -5,12 +5,13 @@ import Main from "./Main";
 import {CssBaseline, MuiThemeProvider} from "material-ui";
 import CustomTheme from "./CustomTheme";
 import {initListeners} from "./Information/Layout/Listeners";
-import {getStops} from "./Information/Static/Stops";
+import {initUser} from "./User/UserFunctions";
 
 export default class App extends Component {
 
 	async componentWillMount() {
 		initListeners()
+		initUser()
 	}
 
 	render() {

@@ -16,8 +16,12 @@ export const getStops = async () => {
 }
 
 export const getStop = async (gtfsId) => {
-	let stops = await getStops()
-	return stops.find((stop) => stop.gtfsId === gtfsId)
+	if(gtfsId) {
+		let stops = await getStops()
+		return stops.find((stop) => stop.gtfsId === gtfsId)
+	}
+	return null
+
 }
 
 export const getConnectedStops = async (gtfsId) => {

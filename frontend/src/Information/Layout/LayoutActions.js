@@ -17,3 +17,25 @@ export const setLanguage = (language) => {
 		})
 	}
 }
+
+let notificationTimeout = null
+
+export const setNotification = (message) => {
+	return async (dispatch) => {
+		if(notificationTimeout) {
+			clearTimeout(notificationTimeout)
+		}
+
+		dispatch({
+			type: "SET_NOTIFICATION",
+			notification: message
+		})
+
+		notificationTimeout = setTimeout(() => {
+			dispatch({
+				type: "SET_NOTIFICATION",
+				notification: ""
+			})
+		}, 5000)
+	}
+}

@@ -3,6 +3,7 @@ import AppBar from "./Navigation/AppBar";
 import Drawer from "./Navigation/Drawer";
 import {BrowserRouter} from "react-router-dom";
 import Router from "./Navigation/Router";
+import Notification from "./Information/Layout/Notification";
 
 export default class Main extends Component {
 
@@ -13,6 +14,7 @@ export default class Main extends Component {
 					<AppBar/>
 					<Drawer/>
 					<Router/>
+					<Notification/>
 				</div>
 			</BrowserRouter>
 		)

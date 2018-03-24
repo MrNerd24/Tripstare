@@ -13,12 +13,12 @@ router.post('/', async (request, response) => {
 		const {username, password} = request.body
 
 		if (password.length < 5) {
-			return response.status(400).json({error: 'Password was too short'})
+			return response.status(400).json({error: 'Password was too short', status: 400})
 		}
 
 		const existing = await User.findOne({username})
 		if (existing) {
-			return response.status(400).json({error: 'Username was taken'})
+			return response.status(400).json({error: 'Username was taken', status: 400})
 		}
 
 		const saltRounds = 10
@@ -38,7 +38,7 @@ router.post('/', async (request, response) => {
 		response.status(201).json(savedUser)
 	} catch (exception) {
 		console.log(exception)
-		response.status(500).json({error: 'Something went wrong...'})
+		response.status(500).json({error: 'Something went wrong...', status: 500})
 	}
 })
 
@@ -49,7 +49,40 @@ router.post('/exists', async (request, response) => {
 		response.status(200).json({exists: !!exists})
 	} catch(e) {
 		console.log(e)
-		response.status(500).json({error: 'Something went wrong...'})
+		response.status(500).json({error: 'Something went wrong...', status: 500})
+	}
+})
+
+router.post("/login", async (request, response) => {
+	try{
+		if(request.token) {
+			let token = request.token
+			let username = jwt.verify(token, process.env.SECRET)
+			let user = await User.findOne({username})
+			if(user) {
+				response.status(200).json({...User.format(user), token})
+			} else {
+				response.status(400).json({error: "Bad token", status: 400})
+			}
+		} else {
+			let {username, password} = request.body
+
+			let user = await User.findOne({username})
+			if(!user) {
+				response.status(401).json({error: "Incorrect username or password", status: 401})
+			}
+
+			let passwordsMatch = await bcrypt.compare(password, user.passwordHash)
+			if(passwordsMatch) {
+				let token = jwt.sign(username, process.env.SECRET)
+				response.status(200).json({...User.format(user), token})
+			} else {
+				response.status(401).json({error: "Incorrect username or password", status: 401})
+			}
+		}
+	} catch(e) {
+		console.log(e)
+		response.status(500).json({error: 'Something went wrong...', status: 500})
 	}
 })
 
