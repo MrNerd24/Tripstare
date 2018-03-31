@@ -27,6 +27,5 @@
   "display": "standalone",
   "theme_color": "#4db6ac",
   "background_color": "#fafafa",
-  "description": "Tripstare tarjoaa Helsingin seudun liikenteen käyttäjille realiaika tietoa omista matkoistaan. Käyttäjä asettaa säännöllisesti käyttämänsä reitit sovellukseen, jonka jälkeen sovellus osaa näyttää juuri tärkeimmät ja ajankohtaisimmat matkaann liittyvät tiedot, kuten milloin seuraava bussi tulee. Sovelluksessa panostetaan siihen että kaikki tarvittava tieto on näkyvissä heti etusivulla, jolloin sovellusta ehtii käyttää myös kiireessä.",
-
+  "description": "Tripstare tarjoaa Helsingin seudun liikenteen käyttäjille realiaika tietoa omista matkoistaan. Käyttäjä asettaa säännöllisesti käyttämänsä reitit sovellukseen, jonka jälkeen sovellus osaa näyttää juuri tärkeimmät ja ajankohtaisimmat matkaann liittyvät tiedot, kuten milloin seuraava bussi tulee. Sovelluksessa panostetaan siihen että kaikki tarvittava tieto on näkyvissä heti etusivulla, jolloin sovellusta ehtii käyttää myös kiireessä."
 }
