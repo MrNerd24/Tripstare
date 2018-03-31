@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
+import Container from "../CommonComponents/Container";
+import RouteSituation from "./RouteSituation";
 
 
 export default class SituationComponent extends Component {
 
 	render() {
 		return(
-			<div>
-				<p>Situation</p>
-			</div>
+			<Container>
+				{this.props.routes.map((route) => <RouteSituation key={route.id} route={route}/>)}
+			</Container>
 		)
 	}
 

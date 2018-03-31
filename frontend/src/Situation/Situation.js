@@ -6,7 +6,7 @@ export class Situation extends Component {
 
 	render() {
 		return(
-			<SituationComponent/>
+			<SituationComponent routes={this.props.routes}/>
 		)
 	}
 
@@ -14,7 +14,7 @@ export class Situation extends Component {
 
 const mapStateToProps = (state, props) => {
 	return {
-
+		routes: state.routes
 	}
 }
 

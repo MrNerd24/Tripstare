@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "async-mqtt": "^1.0.1",
     "axios": "^0.18.0",
     "localforage": "^1.6.0",
     "material-ui": "^1.0.0-beta.37",
