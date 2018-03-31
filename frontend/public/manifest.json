@@ -1,15 +1,32 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Tripstare",
+  "name": "Tripstare",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "src": "favicon16.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "favicon24.ico",
+      "sizes": "24x24",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "favicon32.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "favicon64.ico",
+      "sizes": "64x64",
       "type": "image/x-icon"
     }
   ],
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#4db6ac",
+  "background_color": "#fafafa",
+  "description": "Tripstare tarjoaa Helsingin seudun liikenteen käyttäjille realiaika tietoa omista matkoistaan. Käyttäjä asettaa säännöllisesti käyttämänsä reitit sovellukseen, jonka jälkeen sovellus osaa näyttää juuri tärkeimmät ja ajankohtaisimmat matkaann liittyvät tiedot, kuten milloin seuraava bussi tulee. Sovelluksessa panostetaan siihen että kaikki tarvittava tieto on näkyvissä heti etusivulla, jolloin sovellusta ehtii käyttää myös kiireessä.",
+
 }
