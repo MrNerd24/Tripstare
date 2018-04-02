@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import MQTT from 'async-mqtt'
 
-let client = MQTT.connect("ws://mqtt.hsl.fi:1883")
+let client = MQTT.connect("wss://mqtt.hsl.fi")
 
 export const subscribe2 = async (listener, time = 1000, type = "+", id = "+", line = "+", direction = "+", headsign = "+", start_time = "+", next_stop = "+", geohash_level = "+", geohash = "+") => {
 	type = type ? type : "+"
@@ -13,11 +13,11 @@ export const subscribe2 = async (listener, time = 1000, type = "+", id = "+", li
 	next_stop = next_stop ? next_stop : "+"
 	geohash_level = geohash_level ? geohash_level : "+"
 	geohash = geohash ? geohash : "+"
-	let url = `/hfp/journey/${type}/${id}/${line}/${direction}/${headsign}/${start_time}/${next_stop}/${geohash_level}/${geohash}/`
+	let url = `/hfp/journey/${type}/${id}/${line}/${direction}/${headsign}/${start_time}/${next_stop}/${geohash_level}/${geohash}/#`
 	console.log(url)
 	console.log(client)
 	client.subscribe(url)
-	client.handleMessage(null, listener)
+	client.on("message", listener)
 }
 
 

@@ -29,7 +29,26 @@ export const routesBetweenStops = async (startId, endId) => {
 		}
 	}
 	return connectedRoutesIds
+}
 
+export const getRoute = async (routeId) => {
 
+	let query = `{
+  route(id: "${routeId}") {
+    shortName
+    longName
+    gtfsId
+    mode
+		bikesAllowed
+    alerts {
+      alertDescriptionTextTranslations {
+        text
+        language
+      }
+    }
+  }
+}`
+	let response = await runQuery(query)
+	return response.data.route
 
 }
