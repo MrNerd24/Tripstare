@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
 import Card from "../CommonComponents/Card";
 import {Typography} from "material-ui";
-import {getRoute, routesBetweenStops} from "../Information/Static/Routes";
-import {getTodaysTripsForRoute, getTrip} from "../Information/Realtime/RouteArrivalTimes";
-import {subscribe, subscribe2} from "../Information/HSLHVPDao";
+import {routesBetweenStops} from "../Information/Static/Routes";
+import {getArrivalTime, getTodaysStoptimesForStop, isRealtime} from "../Information/Realtime/RouteArrivalTimes";
 
 export default class RouteSituation extends Component {
 
@@ -13,149 +12,90 @@ export default class RouteSituation extends Component {
 
 		this.state = {
 			secondsTillNextVehicle: 0,
+			minutesTillNextVahicle: 0,
 			stoptime: {
-				time: 0,
+				time: -1,
+				route: "",
+				routeName: "",
 				realtime: false,
-				route: {
-					shortName: "Unknown"
-				}
+				trip: ""
 			}
 		}
 
 		this.routeIds = null
-		this.trips = null
 		this.serverIntervalId = null
 		this.routes = null
 		this.stopTimeQueue = []
-		this.today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
 	}
 
 
 	async componentDidMount() {
-
-		this.routeIds = await routesBetweenStops(this.props.route.startStop.gtfsId, this.props.route.endStop.gtfsId)
-		this.routes = await Promise.all(this.routeIds.map((routeId) => getRoute(routeId)))
-		this.trips = await Promise.all(this.routeIds.map((routeId) => getTodaysTripsForRoute(routeId)))
-		subscribe((message) => {
-			console.log(message)
-		}, null, null, null, null,null, null, null,this.props.route.startStop.gtfsId.split(":")[1])
-		await this.buildTripsQueue()
-		this.updateInfo()
-		this.serverIntervalId = setInterval(this.updateInfo, 60000)
-		this.renderIntervalId = setInterval(this.updateRemainingTime, 1000)
+		if(this.props.route.startStop && this.props.route.endStop) {
+			this.routeIds = await routesBetweenStops(this.props.route.startStop.gtfsId, this.props.route.endStop.gtfsId)
+			this.stopTimeQueue = await getTodaysStoptimesForStop(this.props.route.startStop.gtfsId, this.routeIds)
+			await this.updateTime()
+			this.serverIntervalId = setInterval(() => this.updateTime(), 30000)
+			this.renderIntervalId = setInterval(() => this.updateRemainingTime(), 1000)
+			this.stoptimesIntervalId = setInterval(async () => {this.stopTimeQueue = await getTodaysStoptimesForStop(this.props.route.startStop.gtfsId, this.routeIds)}, 600000)
+		}
 	}
 
-	buildTripsQueue = async () => {
-		for (let i = 0; i < this.trips.length; i++) {
-			let route = this.routes[i]
-			let stopIndex = null
-			for (let j = 0; j < this.trips[i].length; j++) {
-				let trip = await getTrip(this.trips[i][j])
-				if (!stopIndex) {
-					for (let k = 0; k < trip.stoptimes.length; k++) {
+	async updateTime() {
+		let stoptime = null
 
-						if (trip.stoptimes[k].stop.gtfsId === this.props.route.startStop.gtfsId) {
-							stopIndex = k
-							break
-						}
-					}
-				}
-				let stoptime = trip.stoptimes[stopIndex]
-
-				if (!stoptime || stoptime.stop.gtfsId !== this.props.route.startStop.gtfsId) {
-					stopIndex = null
-					for (let k = 0; k < trip.stoptimes.length; k++) {
-						if (trip.stoptimes[k].stop.gtfsId === this.props.route.startStop.gtfsId) {
-							stopIndex = k
-							break
-						}
-					}
-					stoptime = trip.stoptimes[stopIndex]
-				}
-				if(!stoptime) {
-					continue
-				}
-				let time = stoptime.realtimeArrival * 1000 + this.today.getTime();
-				if (time > Date.now()) {
-					let stoptimeForQueue = {
-						tripId: trip.gtfsId,
-						time,
-						route,
-						realtime: stoptime.realtime,
-					}
-					this.stopTimeQueue.push(stoptimeForQueue)
-				}
+		while (!stoptime || stoptime.time < Date.now()) {
+			stoptime = this.stopTimeQueue.pop()
+			if(!stoptime) {
+				return
+			}
+			if(stoptime.realtime === undefined) {
+				stoptime.realtime = await isRealtime(stoptime.trip, this.props.route.startStop.gtfsId)
+			}
+			if(stoptime.realtime) {
+				stoptime.time = await getArrivalTime(stoptime.trip, this.props.route.startStop.gtfsId)
 			}
 		}
-		this.stopTimeQueue.sort((a, b) => b.time - a.time)
+		this.stopTimeQueue.push(stoptime)
+		this.setState({stoptime})
+
+
 	}
 
-	updateRemainingTime = () => {
-		if (this.state.stoptime.time !== 0) {
-			let time = Math.floor((this.state.stoptime.time - Date.now()) / 1000);
-			if (time >= 0) {
-				this.setState({secondsTillNextVehicle: time})
-			} else {
-				this.updateInfo()
-			}
-
+	updateRemainingTime() {
+		let timeRemaining = this.state.stoptime.time - Date.now()
+		if (timeRemaining <= 0) {
+			this.updateTime()
+		} else {
+			this.setState({secondsTillNextVehicle: Math.floor(timeRemaining / 1000)%60, minutesTillNextVahicle: Math.floor((timeRemaining / (1000*60)))})
 		}
 	}
 
 	componentWillUnmount() {
 		clearInterval(this.serverIntervalId)
 		clearInterval(this.renderIntervalId)
+		clearInterval(this.stoptimesIntervalId)
 	}
 
-	updateInfo = async () => {
-
-		let stoptime = this.stopTimeQueue.pop()
-		if(!stoptime) {
-			return
-		}
-		while (stoptime.time < Date.now()) {
-			stoptime = this.stopTimeQueue.pop()
-		}
-
-		if(!stoptime) {
-			return
-		}
-		console.log(stoptime)
-		let trip = await getTrip(stoptime.tripId)
-		console.log(trip)
-		console.log(this.props.route.startStop.gtfsId)
-		let stopTimeFromTrip = null
-		for(let i = 0; i < trip.stoptimes.length; i++) {
-			console.log(trip.stoptimes[i].stop.gtfsId)
-			if(trip.stoptimes[i].stop.gtfsId === this.props.route.startStop.gtfsId) {
-				console.log("found")
-				stopTimeFromTrip = trip.stoptimes[i]
-				break
-			}
-		}
-		console.log(stopTimeFromTrip)
-		let time = stopTimeFromTrip.realtimeArrival * 1000 + this.today.getTime()
-		let newStopTime = {
-			tripId: trip.gtfsId,
-			time,
-			route: stoptime.route,
-			realtime: stopTimeFromTrip.realtime
-		}
-		this.stopTimeQueue.push(newStopTime)
-		this.setState({stoptime: newStopTime})
-
-	}
 
 	render() {
+		if(this.props.route.startStop && this.props.route.endStop) {
+			return this.renderSituation();
+		}
+		return null
+	}
+
+
+	renderSituation() {
 		return (
 			<Card>
 				<Typography
 					variant="title">{this.props.route.startStop.name} - {this.props.route.endStop.name}</Typography>
-				<Typography>{this.state.secondsTillNextVehicle}</Typography>
-				<Typography>{this.state.stoptime.route.shortName}</Typography>
+				<div style={{display: "flex", justifyContent: "space-between"}}>
+					<Typography variant="subheading">{this.state.stoptime.routeName}</Typography>
+					<Typography
+						style={{color: this.state.stoptime.realtime ? "green" : "black"}}>{this.state.minutesTillNextVahicle !== 0 ? this.state.minutesTillNextVahicle + " min": null} {this.state.secondsTillNextVehicle} sec</Typography>
+				</div>
 			</Card>
 		)
 	}
-
-
 }

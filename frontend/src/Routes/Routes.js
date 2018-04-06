@@ -20,12 +20,13 @@ export class Routes extends Component {
 	}
 
 	handleSaveClick = async (route) => {
-		route.startStop = route.startStop ? route.startStop.gtfsId : null
-		route.endStop = route.endStop ? route.endStop.gtfsId : null
+		let routeCopy = {...route}
+		routeCopy.startStop = route.startStop ? route.startStop.gtfsId : null
+		routeCopy.endStop = route.endStop ? route.endStop.gtfsId : null
 		if(this.props.user.loggedIn) {
-			RoutesServerDao.setRoute(route, this.props.user.info.token)
+			RoutesServerDao.setRoute(routeCopy, this.props.user.info.token)
 		} else {
-			RoutesLocalDao.setRoute(route)
+			RoutesLocalDao.setRoute(routeCopy)
 		}
 	}
 
