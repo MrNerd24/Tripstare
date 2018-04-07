@@ -1,4 +1,8 @@
 export default {
+	//meta
+	metaLanguageShortName: "en",
+	metaLanguageName: "english",
+
 	// drawer
 	situation: "Situation",
 	routes: "Routes",
@@ -28,9 +32,13 @@ export default {
 	badUsernameOrPassword: "Invalid username or password",
 	language: "Language",
 	english: "English",
-	finnish: "Finnish"
+	finnish: "Finnish",
 
-
+	// situation
+	arrivesAt: "Arrives at",
+	timeRemaining: "Time remaining",
+	alerts: "Alerts",
+	atDestination: "At destination"
 
 
 }

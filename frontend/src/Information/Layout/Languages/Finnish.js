@@ -1,4 +1,8 @@
 export default {
+	//meta
+	metaLanguageShortName: "fi",
+	metaLanguageName: "finnish",
+
 	// drawer
 	situation: "Tilanne",
 	routes: "Reitit",
@@ -28,6 +32,11 @@ export default {
 	badUsernameOrPassword: "Väärä käyttäjätunnus tai salasana",
 	language: "Kieli",
 	english: "Englanti",
-	finnish: "Suomi"
+	finnish: "Suomi",
 
+	// situation
+	arrivesAt: "Saapuu kello",
+	timeRemaining: "Aikaa jäljellä",
+	alerts: "Häiriöt",
+	atDestination: "Päätepysäkillä kello"
 }

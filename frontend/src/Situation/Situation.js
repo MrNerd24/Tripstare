@@ -6,7 +6,10 @@ export class Situation extends Component {
 
 	render() {
 		return(
-			<SituationComponent routes={this.props.routes}/>
+			<SituationComponent
+				routes={this.props.routes}
+				language={this.props.language}
+			/>
 		)
 	}
 
@@ -14,7 +17,8 @@ export class Situation extends Component {
 
 const mapStateToProps = (state, props) => {
 	return {
-		routes: state.routes
+		routes: state.routes,
+		language : state.information.layout.language
 	}
 }
 
