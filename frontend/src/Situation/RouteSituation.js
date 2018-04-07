@@ -44,7 +44,12 @@ export default class RouteSituation extends Component {
 		}
 	}
 
+	updating = false
 	async updateTime() {
+		if(this.updating) {
+			return
+		}
+		this.updating = true
 		let stoptime = null
 
 		while (!stoptime || stoptime.departureTime < Date.now()) {
@@ -62,7 +67,7 @@ export default class RouteSituation extends Component {
 		}
 		this.stopTimeQueue.push(stoptime)
 		this.setState({stoptime})
-
+		this.updating = false
 
 	}
 
