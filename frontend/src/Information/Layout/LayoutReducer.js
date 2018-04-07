@@ -3,8 +3,8 @@ import Languages from './Languages'
 let initialState = {
 	height: 1080,
 	width: 1920,
-	language: Languages.finnish,
-	languageValue: "finnish",
+	language: Languages.english,
+	languageValue: "english",
 	notification: ""
 }
 
