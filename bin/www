@@ -33,6 +33,10 @@ server.on('close', () => {
 	mongoose.connection.close()
 })
 
+module.exports = server
+
+require('../Websockets/ConnectionsManager').startListening()
+
 /**
  * Normalize a port into a number, string, or false.
  */

@@ -1,4 +1,7 @@
 import {runQuery} from "../HSLGraphQLDao";
+import io from 'socket.io-client'
+
+let socket = io()
 
 
 export const getTodaysStoptimesForStop = async (startStop, endStop, routeIds) => {
