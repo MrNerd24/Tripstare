@@ -1,9 +1,12 @@
+import Actions from '../Actions'
+
 export const addRoute = (route) => {
 	return async (dispatch) => {
 		dispatch({
 			type: "ADD_ROUTE",
 			route
 		})
+		dispatch(Actions.addStoptime(route))
 	}
 }
 
@@ -13,6 +16,7 @@ export const setRoute = (route) => {
 			type: "SET_ROUTE",
 			route
 		})
+		dispatch(Actions.setStoptime(route))
 	}
 }
 
@@ -22,6 +26,7 @@ export const setRoutes = (routes) => {
 			type: "SET_ROUTES",
 			routes
 		})
+		dispatch(Actions.setStoptimes(routes))
 	}
 }
 
@@ -31,5 +36,6 @@ export const deleteRoute = (id) => {
 			type: "DELETE_ROUTE",
 			id
 		})
+		dispatch(Actions.deleteStoptime({id}))
 	}
 }

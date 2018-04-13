@@ -7,7 +7,7 @@ export class Situation extends Component {
 	render() {
 		return(
 			<SituationComponent
-				routes={this.props.routes}
+				stoptimes={this.props.stoptimes}
 				language={this.props.language}
 			/>
 		)
@@ -17,7 +17,7 @@ export class Situation extends Component {
 
 const mapStateToProps = (state, props) => {
 	return {
-		routes: state.routes,
+		stoptimes: state.situation.stoptimes,
 		language : state.information.layout.language
 	}
 }

@@ -4,8 +4,8 @@ let stopTimes = new Map()
 let routesBetweenStops = new Map()
 
 let stopTimesAlreadyCalculated = (startStop, endStop) => {
-	if (stopTimes.includes(startStop)) {
-		if (stopTimes.get(startStop).includes(endStop)) {
+	if (stopTimes.has(startStop)) {
+		if (stopTimes.get(startStop).has(endStop)) {
 			if (stopTimes.get(startStop).get(endStop).length > 0) {
 				return true
 			}
@@ -14,9 +14,76 @@ let stopTimesAlreadyCalculated = (startStop, endStop) => {
 	return false
 }
 
-let emitFromCalculatedStoptimes = (connectedSockets, startStop, endStop) => {
-	let neededStopTimes = stopTimes.get(startStop).get(endStop)
+let getTripStoptimesData = async (stoptime) => {
+	await stoptime
+	let todayString = getTodayString()
+	let query = `{
+  trip(id:"${stoptime.trip}") {
+    stoptimesForDate(serviceDate: "${todayString}") {
+      scheduledArrival
+      arrivalDelay
+      serviceDay
+      realtime
+      stop {
+        gtfsId
+      }
+    }
+  }
+}`
 
+	let response = await runQuery(query)
+	return response.data.trip.stoptimesForDate
+}
+
+
+let updateStopTime = async (stoptime) => {
+
+	let today = getTodayDate()
+
+	let stoptimesData = await getTripStoptimesData(stoptime);
+
+	if(!stoptimesData) {
+		return stoptime
+	}
+	let startStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.startStop)
+	let endStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.endStop)
+	if (startStoptime && endStoptime) {
+		let update = {
+			departureTime: today.getTime() + startStoptime.scheduledArrival * 1000 + startStoptime.arrivalDelay * 1000,
+			arrivalTime: today.getTime() + endStoptime.scheduledArrival * 1000 + endStoptime.arrivalDelay * 1000,
+			realtime: startStoptime.realtime
+		}
+		if (update.departureTime > update.arrivalTime) {
+			update.arrivalTime = update.arrivalTime + 86400000
+		}
+		return {...stoptime, ...update}
+	} else {
+		return stoptime
+	}
+}
+
+let updateSoonestStopTimes = async (neededStopTimes) => {
+	for(let i = neededStopTimes.length-1; i >= Math.max(neededStopTimes.length-5,0); i--) {
+		let stoptimeToBeUpdated = await neededStopTimes[i];
+		neededStopTimes[i] = updateStopTime(stoptimeToBeUpdated)
+	}
+	return (await Promise.all(neededStopTimes)).sort((a, b) => b.arrivalTime - a.arrivalTime)
+
+}
+
+let emitFromCalculatedStoptimes = async (socketIds, connectedSockets, startStop, endStop) => {
+	let neededStopTimes = stopTimes.get(startStop).get(endStop)
+	let updatedStopTimes = await updateSoonestStopTimes(neededStopTimes)
+	let latest = null
+	do{
+		latest = updatedStopTimes.pop()
+	} while(latest.departureTime <= Date.now())
+	updatedStopTimes.push(latest)
+	stopTimes.get(startStop).set(endStop, updatedStopTimes)
+	socketIds.forEach((socketId) => {
+		let socket = connectedSockets.get(socketId.socketId)
+		socket.emit("updatedStoptime", {...latest, id: socketId.id})
+	})
 }
 
 let getTodayDate = () => {
@@ -81,30 +148,42 @@ let getStopsRouteData = async (startStop) => {
 	return routes;
 }
 
-let getRoutesBetweenStops = async (startStop, endStop) => {
-	let routes = await getStopsRouteData(startStop);
+let calculateRoutesBetweenStops = (routes, endStop) => {
 	let connectedRoutesIds = []
-	for(let i = 0; i < routes.length; i++) {
+	for (let i = 0; i < routes.length; i++) {
 		let gtfsId = routes[i].gtfsId
 		let endStopfound = false
-		for(let j = 0; j < routes[i].stops.length; j++) {
-			if(routes[i].stops[j].gtfsId === endStop) {
-				endStopfound=true
+		for (let j = 0; j < routes[i].stops.length; j++) {
+			if (routes[i].stops[j].gtfsId === endStop) {
+				endStopfound = true
 				break
 			}
 		}
-		if(endStopfound) {
+		if (endStopfound) {
 			connectedRoutesIds.push(gtfsId)
 		}
 	}
 	return connectedRoutesIds
+};
+let getRoutesBetweenStops = async (startStop, endStop) => {
+	if(routesBetweenStops.has(startStop)) {
+		if(routesBetweenStops.get(startStop).has(endStop)) {
+			return routesBetweenStops.get(startStop).get(endStop)
+		}
+	}
+	let routes = await getStopsRouteData(startStop);
+	let calculatedRoutes = calculateRoutesBetweenStops(routes, endStop);
+	if(!routesBetweenStops.has(startStop)) {
+		routesBetweenStops.set(startStop, new Map())
+	}
+	routesBetweenStops.get(startStop).set(endStop,calculatedRoutes)
+	return calculatedRoutes
 }
 
 let calculateStopTimes = async (stoptimesData, startStop, endStop) => {
 	let stoptimeCollections = stoptimesData.stop.stoptimesForServiceDate
 	let results = []
 	let routeIds = await getRoutesBetweenStops(startStop, endStop)
-
 	for (let i = 0; i < stoptimeCollections.length; i++) {
 		let stoptimes = stoptimeCollections[i].stoptimes
 		let route = stoptimeCollections[i].pattern.route.gtfsId
@@ -147,26 +226,36 @@ let calculateStopTimes = async (stoptimesData, startStop, endStop) => {
 
 let addToStopTimes = async (stoptimesData, startStop, endStop) => {
 	let newStopTimeList = await calculateStopTimes(stoptimesData, startStop, endStop);
-	if(!stopTimes.includes(startStop)) {
+	if(!stopTimes.has(startStop)) {
 		stopTimes.set(startStop, new Map())
 	}
 	stopTimes.get(startStop).set(endStop, newStopTimeList)
 }
 
+let emitSingleUpdate = (startStop, endStop, routeSubscribers, connectedSockets) => {
+	emitUpdate(startStop, endStop, null, routeSubscribers, connectedSockets)
+}
+
+let emitUpdate = async (startStop, endStop, stoptimesData, routeSubscribers, connectedSockets) => {
+	if (!stopTimesAlreadyCalculated(startStop, endStop)) {
+		if (!stoptimesData) {
+			stoptimesData = await getStoptimesData(startStop)
+		}
+		await addToStopTimes(stoptimesData, startStop, endStop)
+	}
+	let socketIds = routeSubscribers.get(startStop).get(endStop)
+	emitFromCalculatedStoptimes(socketIds, connectedSockets, startStop, endStop)
+}
+
+
 let emitUpdates = async (routeSubscribers, connectedSockets) => {
 	for (let startStop of routeSubscribers.keys()) {
 		let stoptimesData = null
 		for (let endStop of routeSubscribers.get(startStop).keys()) {
-			if (!stopTimesAlreadyCalculated(startStop, endStop)) {
-				if (!stoptimesData) {
-					stoptimesData = await getStoptimesData(startStop)
-				}
-				await addToStopTimes(stoptimesData, startStop, endStop)
-			}
-			emitFromCalculatedStoptimes(connectedSockets, startStop, endStop)
+			await emitUpdate(startStop, endStop, stoptimesData, routeSubscribers, connectedSockets);
 		}
 	}
 }
 
 
-module.exports = {emitUpdates}
+module.exports = {emitUpdates, emitSingleUpdate}

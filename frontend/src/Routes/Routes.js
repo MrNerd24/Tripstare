@@ -102,7 +102,7 @@ const mapDispatchToProps = (dispatch, props) => {
 	return {
 		addRoute: (route) => dispatch(Actions.addRoute(route)),
 		deleteRoute: (id) => dispatch(Actions.deleteRoute(id)),
-		setRoute: (route) => dispatch(Actions.setRoute(route))
+		setRoute: (route) => dispatch(Actions.setRoute(route)),
 	}
 }
 
