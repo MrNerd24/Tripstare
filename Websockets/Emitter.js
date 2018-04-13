@@ -6,7 +6,7 @@ let routesBetweenStops = new Map()
 let stopTimesAlreadyCalculated = (startStop, endStop) => {
 	if (stopTimes.has(startStop)) {
 		if (stopTimes.get(startStop).has(endStop)) {
-			if (stopTimes.get(startStop).get(endStop).length > 0) {
+			if (stopTimes.get(startStop).get(endStop).length > 1) {
 				return true
 			}
 		}
@@ -74,11 +74,10 @@ let updateSoonestStopTimes = async (neededStopTimes) => {
 let emitFromCalculatedStoptimes = async (socketIds, connectedSockets, startStop, endStop) => {
 	let neededStopTimes = stopTimes.get(startStop).get(endStop)
 	let updatedStopTimes = await updateSoonestStopTimes(neededStopTimes)
-	let latest = null
-	do{
-		latest = updatedStopTimes.pop()
-	} while(latest.departureTime <= Date.now())
-	updatedStopTimes.push(latest)
+	while(updatedStopTimes[updatedStopTimes.length-1].departureTime <= Date.now()) {
+		updatedStopTimes.pop()
+	}
+	let latest = updatedStopTimes[updatedStopTimes.length-1]
 	stopTimes.get(startStop).set(endStop, updatedStopTimes)
 	socketIds.forEach((socketId) => {
 		let socket = connectedSockets.get(socketId.socketId)
