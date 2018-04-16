@@ -67,14 +67,15 @@ let updateSoonestStopTimes = async (neededStopTimes) => {
 		let stoptimeToBeUpdated = await neededStopTimes[i];
 		neededStopTimes[i] = updateStopTime(stoptimeToBeUpdated)
 	}
-	return (await Promise.all(neededStopTimes)).sort((a, b) => b.arrivalTime - a.arrivalTime)
+	let updatedStoptimes = await Promise.all(neededStopTimes);
+	return updatedStoptimes.sort((a, b) => b.arrivalTime - a.arrivalTime)
 
 }
 
 let emitFromCalculatedStoptimes = async (socketIds, connectedSockets, startStop, endStop) => {
 	let neededStopTimes = stopTimes.get(startStop).get(endStop)
 	let updatedStopTimes = await updateSoonestStopTimes(neededStopTimes)
-	while(updatedStopTimes[updatedStopTimes.length-1].departureTime <= Date.now()) {
+	while((await updatedStopTimes[updatedStopTimes.length-1]).departureTime <= Date.now()) {
 		updatedStopTimes.pop()
 	}
 	let latest = updatedStopTimes[updatedStopTimes.length-1]
