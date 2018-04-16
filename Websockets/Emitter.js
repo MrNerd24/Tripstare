@@ -37,28 +37,20 @@ let getTripStoptimesData = async (stoptime) => {
 
 
 let updateStopTime = async (stoptime) => {
-	console.log("updating for", stoptime)
 	let today = getTodayDate()
-	console.log("today", today)
 	let stoptimesData = await getTripStoptimesData(stoptime);
-	console.log("trip stop times", stoptimesData, "for ", stoptime)
 	if(!stoptimesData) {
-		console.log("no stopdata")
 		return stoptime
 	}
 	let startStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.startStop)
-	console.log("startStoptime", startStoptime, "for ", stoptime)
 	let endStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.endStop)
-	console.log("endStoptime", endStoptime, "for ", stoptime)
 	if (startStoptime && endStoptime) {
 		let update = {
-			departureTime: today.getTime() + startStoptime.scheduledArrival * 1000 + startStoptime.arrivalDelay * 1000,
-			arrivalTime: today.getTime() + endStoptime.scheduledArrival * 1000 + endStoptime.arrivalDelay * 1000,
+			departureTime: startStoptime.serviceDay*1000 + startStoptime.scheduledArrival * 1000 + startStoptime.arrivalDelay * 1000,
+			arrivalTime: endStoptime.serviceDay*1000 + endStoptime.scheduledArrival * 1000 + endStoptime.arrivalDelay * 1000,
 			realtime: startStoptime.realtime
 		}
-		console.log("update", update, "for ", stoptime)
 		if (update.departureTime > update.arrivalTime) {
-			console.log("added a day", " for ", stoptime)
 			update.arrivalTime = update.arrivalTime + 86400000
 		}
 		return {...stoptime, ...update}
@@ -72,26 +64,19 @@ let updateSoonestStopTimes = async (neededStopTimes) => {
 		let stoptimeToBeUpdated = await neededStopTimes[i];
 		neededStopTimes[i] = updateStopTime(stoptimeToBeUpdated)
 	}
-	console.log("updated soonest before promise all and sort", neededStopTimes.slice(-5))
 	let updatedStoptimes = await Promise.all(neededStopTimes);
-	console.log("updated soonest before sort after promise all", updatedStoptimes.slice(-5))
 	updatedStoptimes.sort((a, b) => b.arrivalTime - a.arrivalTime)
-	console.log("updated soonest after sort and promise all", updatedStoptimes.slice(-5))
 	return updatedStoptimes
 
 }
 
 let emitFromCalculatedStoptimes = async (socketIds, connectedSockets, startStop, endStop) => {
 	let neededStopTimes = stopTimes.get(startStop).get(endStop)
-	console.log("result from map", neededStopTimes.slice(-5))
 	let updatedStopTimes = await updateSoonestStopTimes(neededStopTimes)
-	console.log("updated soonest, should be no promises", updatedStopTimes.slice(-5))
 	while((await updatedStopTimes[updatedStopTimes.length-1]).departureTime <= Date.now()) {
 		updatedStopTimes.pop()
 	}
-	console.log("updated soonest after popping", updatedStopTimes.slice(-5))
 	let latest = updatedStopTimes[updatedStopTimes.length-1]
-	console.log("latest", latest)
 	stopTimes.get(startStop).set(endStop, updatedStopTimes)
 	socketIds.forEach((socketId) => {
 		let socket = connectedSockets.get(socketId.socketId)
@@ -234,7 +219,6 @@ let calculateStopTimes = async (stoptimesData, startStop, endStop) => {
 
 	}
 	results.sort((a, b) => b.arrivalTime - a.arrivalTime)
-	console.log("first stoptime list", results.slice(-5))
 	return results
 }
 
