@@ -37,7 +37,6 @@ let getTripStoptimesData = async (stoptime) => {
 
 
 let updateStopTime = async (stoptime) => {
-	let today = getTodayDate()
 	let stoptimesData = await getTripStoptimesData(stoptime);
 	if(!stoptimesData) {
 		return stoptime
