@@ -68,7 +68,6 @@ let updateSoonestStopTimes = async (neededStopTimes) => {
 		neededStopTimes[i] = updateStopTime(stoptimeToBeUpdated)
 	}
 	let updatedStoptimes = await Promise.all(neededStopTimes);
-	console.log(updatedStoptimes.slice(-5))
 	updatedStoptimes.sort((a, b) => b.arrivalTime - a.arrivalTime)
 	return updatedStoptimes
 
@@ -223,6 +222,7 @@ let calculateStopTimes = async (stoptimesData, startStop, endStop) => {
 
 	}
 	results.sort((a, b) => b.arrivalTime - a.arrivalTime)
+	console.log(results.slice(-5))
 	return results
 }
 
