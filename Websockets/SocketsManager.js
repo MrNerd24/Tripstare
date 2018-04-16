@@ -28,8 +28,10 @@ let setListeners = (socket) => {
 	})
 
 	socket.on('updateTimes', (id) => {
-		let {startStop, endStop} = subscriptions.get(socket.id).find((route) => route.id === id)
-		Emitter.emitSingleUpdate(startStop, endStop, routeSubscribers, connectedSockets)
+		if(subscriptions.has(socket.id)) {
+			let {startStop, endStop} = subscriptions.get(socket.id).find((route) => route.id === id)
+			Emitter.emitSingleUpdate(startStop, endStop, routeSubscribers, connectedSockets)
+		}
 	})
 }
 

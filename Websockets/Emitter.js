@@ -15,7 +15,7 @@ let stopTimesAlreadyCalculated = (startStop, endStop) => {
 }
 
 let getTripStoptimesData = async (stoptime) => {
-	await stoptime
+	stoptime = await stoptime
 	let todayString = getTodayString()
 	let query = `{
   trip(id:"${stoptime.trip}") {
@@ -68,7 +68,9 @@ let updateSoonestStopTimes = async (neededStopTimes) => {
 		neededStopTimes[i] = updateStopTime(stoptimeToBeUpdated)
 	}
 	let updatedStoptimes = await Promise.all(neededStopTimes);
-	return updatedStoptimes.sort((a, b) => b.arrivalTime - a.arrivalTime)
+	console.log(updatedStoptimes.slice(-5))
+	updatedStoptimes.sort((a, b) => b.arrivalTime - a.arrivalTime)
+	return updatedStoptimes
 
 }
 
