@@ -37,23 +37,28 @@ let getTripStoptimesData = async (stoptime) => {
 
 
 let updateStopTime = async (stoptime) => {
-
+	console.log("updating for", stoptime)
 	let today = getTodayDate()
-
+	console.log("today", today)
 	let stoptimesData = await getTripStoptimesData(stoptime);
-
+	console.log("trip stop times", stoptimesData, "for ", stoptime)
 	if(!stoptimesData) {
+		console.log("no stopdata")
 		return stoptime
 	}
 	let startStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.startStop)
+	console.log("startStoptime", startStoptime, "for ", stoptime)
 	let endStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.endStop)
+	console.log("endStoptime", endStoptime, "for ", stoptime)
 	if (startStoptime && endStoptime) {
 		let update = {
 			departureTime: today.getTime() + startStoptime.scheduledArrival * 1000 + startStoptime.arrivalDelay * 1000,
 			arrivalTime: today.getTime() + endStoptime.scheduledArrival * 1000 + endStoptime.arrivalDelay * 1000,
 			realtime: startStoptime.realtime
 		}
+		console.log("update", update, "for ", stoptime)
 		if (update.departureTime > update.arrivalTime) {
+			console.log("added a day", " for ", stoptime)
 			update.arrivalTime = update.arrivalTime + 86400000
 		}
 		return {...stoptime, ...update}
