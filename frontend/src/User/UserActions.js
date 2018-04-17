@@ -1,5 +1,6 @@
 import RoutesLocalDao from "../Routes/RoutesLocalDao";
 import {mapStartAndEndStopIdsToObjects} from "./UserFunctions";
+import Actions from '../Actions'
 
 
 export const setUser = (user) => {
@@ -14,10 +15,7 @@ export const setUser = (user) => {
 		} else {
 			routes = await Promise.all((await RoutesLocalDao.getRoutes()).map(mapStartAndEndStopIdsToObjects))
 		}
-		dispatch({
-			type: "SET_ROUTES",
-			routes
-		})
+		dispatch(Actions.setRoutes(routes))
 
 	}
 }

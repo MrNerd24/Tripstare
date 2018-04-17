@@ -32,9 +32,10 @@ export default class EditableRoute extends Component {
 	}
 
 	render() {
+		let title = this.props.startStop && this.props.startStop.name && this.props.endStop && this.props.endStop.name ? this.props.startStop.name + " - " + this.props.endStop.name : this.props.language.editRoute;
 		return(
 			<Card>
-				<Typography variant={"title"}>{this.props.language.editRoute}</Typography>
+				<Typography variant={"title"}>{title}</Typography>
 				<AutoCompleteTextField
 					onChange={this.handleStartStopChange}
 					label={this.props.language.startStop}
