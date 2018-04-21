@@ -29,7 +29,8 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "cross-env": "^5.1.4"
+    "cross-env": "^5.1.4",
+    "jest": "^22.4.3"
   },
   "proxy": "http://localhost:3000"
 }

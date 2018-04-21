@@ -18,6 +18,14 @@ socket.on('connect', () => {
 	})
 })
 
+document.addEventListener("visibilitychange", () => {
+	if(!document.hidden) {
+		if(!socket.id) {
+			socket.connect()
+		}
+	}
+}, false)
+
 export const subscribe = (route) => {
 	if(route.startStop && route.endStop && route.id) {
 		subscribedRoutes.push(route)
