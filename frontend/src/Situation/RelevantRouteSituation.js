@@ -4,7 +4,7 @@ import {Typography} from "material-ui";
 import Alerts from "./Alerts";
 import StoptimesDao from "../Information/Realtime/StoptimesDao";
 
-export default class RouteSituation extends Component {
+export default class RelevantRouteSituation extends Component {
 
 	constructor(props) {
 		super(props)

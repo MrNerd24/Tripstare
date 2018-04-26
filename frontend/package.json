@@ -5,6 +5,7 @@
   "dependencies": {
     "async-mqtt": "^1.0.1",
     "axios": "^0.18.0",
+    "geolib": "^2.0.24",
     "localforage": "^1.6.0",
     "material-ui": "^1.0.0-beta.37",
     "material-ui-icons": "^1.0.0-beta.36",

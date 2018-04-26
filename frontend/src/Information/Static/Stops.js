@@ -78,6 +78,8 @@ export const formatStop = (stop) => {
 		gtfsId: stop.gtfsId,
 		value: stop.gtfsId,
 		text: `${code}${name}${platformCode}${desc}`,
-		code, name, platformCode, desc
+		code, name, platformCode, desc,
+		latitude: stop.lat,
+		longitude: stop.lon
 	}
 }

@@ -75,12 +75,14 @@ let emitFromCalculatedStoptimes = async (socketIds, connectedSockets, startStop,
 	while((await updatedStopTimes[updatedStopTimes.length-1]).departureTime <= Date.now()) {
 		updatedStopTimes.pop()
 	}
-	let latest = updatedStopTimes[updatedStopTimes.length-1]
-	stopTimes.get(startStop).set(endStop, updatedStopTimes)
-	socketIds.forEach((socketId) => {
-		let socket = connectedSockets.get(socketId.socketId)
-		socket.emit("updatedStoptime", {...latest, id: socketId.id})
-	})
+	if(updatedStopTimes.length > 0) {
+		let latest = updatedStopTimes[updatedStopTimes.length-1]
+		stopTimes.get(startStop).set(endStop, updatedStopTimes)
+		socketIds.forEach((socketId) => {
+			let socket = connectedSockets.get(socketId.socketId)
+			socket.emit("updatedStoptime", {...latest, id: socketId.id})
+		})
+	}
 }
 
 let getTodayDate = () => {
@@ -127,6 +129,7 @@ let getStoptimesData = async (startStop) => {
   }
 }`
 	return (await runQuery(query)).data
+
 }
 
 let getStopsRouteData = async (startStop) => {
@@ -235,14 +238,24 @@ let emitSingleUpdate = (startStop, endStop, routeSubscribers, connectedSockets) 
 }
 
 let emitUpdate = async (startStop, endStop, stoptimesData, routeSubscribers, connectedSockets) => {
-	if (!stopTimesAlreadyCalculated(startStop, endStop)) {
-		if (!stoptimesData) {
-			stoptimesData = await getStoptimesData(startStop)
+	try {
+		if (!stopTimesAlreadyCalculated(startStop, endStop)) {
+			if (!stoptimesData) {
+				stoptimesData = await getStoptimesData(startStop)
+			}
+			await addToStopTimes(stoptimesData, startStop, endStop)
 		}
-		await addToStopTimes(stoptimesData, startStop, endStop)
+		let socketIds = routeSubscribers.get(startStop).get(endStop)
+		emitFromCalculatedStoptimes(socketIds, connectedSockets, startStop, endStop)
+	} catch (e) {
+		console.warn(e)
+		if(stopTimes.has(startStop)) {
+			if(stopTimes.get(startStop).has(endStop)) {
+				stopTimes.get(startStop).delete(endStop)
+			}
+		}
 	}
-	let socketIds = routeSubscribers.get(startStop).get(endStop)
-	emitFromCalculatedStoptimes(socketIds, connectedSockets, startStop, endStop)
+
 }
 
 

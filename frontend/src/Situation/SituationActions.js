@@ -4,7 +4,7 @@ import Store from '../Store'
 export const addStoptime = (route) => {
 	return async (dispatch) => {
 		StoptimesDao.subscribe(route)
-		let stoptime = {...route, justAdded: true}
+		let stoptime = {...route, status: "NEW"}
 		dispatch({
 			type: "ADD_STOPTIME",
 			stoptime
@@ -15,7 +15,7 @@ export const addStoptime = (route) => {
 export const setStoptimes = (routes) => {
 	return async (dispatch) => {
 		Store.getState().situation.stoptimes.forEach((stoptime) => StoptimesDao.unSubscribe(stoptime))
-		let stoptimes = routes.map((route) => {return {...route, justAdded:true}})
+		let stoptimes = routes.map((route) => {return {...route, status: "NEW"}})
 		stoptimes.forEach((stoptime) => {
 			StoptimesDao.subscribe(stoptime)
 		})
@@ -34,7 +34,7 @@ export const setStoptime = (route) => {
 			stoptime: route
 		})
 		StoptimesDao.subscribe(route)
-		let stoptime = {...route, justAdded: true}
+		let stoptime = {...route, status: "NEW"}
 		dispatch({
 			type: "ADD_STOPTIME",
 			stoptime
