@@ -16,6 +16,7 @@ export default class RelevantRouteSituation extends Component {
 	}
 
 	intervalId = null
+
 	componentWillMount() {
 		this.intervalId = setInterval(() => {
 			this.calculateRemainingTime()
@@ -26,18 +27,20 @@ export default class RelevantRouteSituation extends Component {
 	componentWillUnmount() {
 		clearInterval(this.intervalId)
 	}
+
 	requestigNewTimes = false
+
 	calculateRemainingTime() {
-		if(this.props.stoptime.departureTime) {
-			let timeRemaining = this.props.stoptime.departureTime-Date.now()
-			if(timeRemaining >= 0) {
+		if (this.props.stoptime.departureTime) {
+			let timeRemaining = this.props.stoptime.departureTime - Date.now()
+			if (timeRemaining >= 0) {
 				this.requestigNewTimes = false
 				this.setState({
 					secondsTillNextVehicle: Math.floor(timeRemaining / 1000) % 60,
 					minutesTillNextVahicle: Math.floor((timeRemaining / (1000 * 60)))
 				})
 			} else {
-				if(!this.requestigNewTimes) {
+				if (!this.requestigNewTimes) {
 					StoptimesDao.requestUpdate(this.props.stoptime)
 					this.requestigNewTimes = true
 				}
@@ -61,8 +64,9 @@ export default class RelevantRouteSituation extends Component {
 		let arrivalTimeString = `${arrivalTime.getHours() < 10 ? "0" + arrivalTime.getHours() : arrivalTime.getHours()}:${arrivalTime.getMinutes() < 10 ? "0" + arrivalTime.getMinutes() : arrivalTime.getMinutes()}:${arrivalTime.getSeconds() < 10 ? "0" + arrivalTime.getSeconds() : arrivalTime.getSeconds()}`
 		return (
 			<Card>
-				<Typography
-					variant="title">{this.props.stoptime.startStop.name} - {this.props.stoptime.endStop.name}</Typography>
+				<Typography variant="title">
+					{this.props.stoptime.startStop.name} - {this.props.stoptime.endStop.name}
+				</Typography>
 				<Typography variant="subheading">{this.props.stoptime.routeName}</Typography>
 				<div style={{display: "flex", justifyContent: "space-between"}}>
 					<Typography>{this.props.language.arrivesAt}</Typography>

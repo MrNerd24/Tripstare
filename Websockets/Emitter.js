@@ -15,6 +15,7 @@ let stopTimesAlreadyCalculated = (startStop, endStop) => {
 }
 
 let getTripStoptimesData = async (stoptime) => {
+
 	stoptime = await stoptime
 	let todayString = getTodayString()
 	let query = `{
@@ -30,23 +31,34 @@ let getTripStoptimesData = async (stoptime) => {
     }
   }
 }`
+	try{
+		let response = await runQuery(query)
+		return response.data.trip.stoptimesForDate
+	} catch(e) {
+		throw new Error("Unable to fetch trip stoptimes data")
+	}
 
-	let response = await runQuery(query)
-	return response.data.trip.stoptimesForDate
+
+
 }
 
 
 let updateStopTime = async (stoptime) => {
-	let stoptimesData = await getTripStoptimesData(stoptime);
-	if(!stoptimesData) {
+
+	try{
+		let stoptimesData = await getTripStoptimesData(stoptime);
+	} catch (e) {
+		return stoptime
+	}
+	if (!stoptimesData) {
 		return stoptime
 	}
 	let startStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.startStop)
 	let endStoptime = stoptimesData.find((stoptimesItem) => stoptimesItem.stop.gtfsId === stoptime.endStop)
 	if (startStoptime && endStoptime) {
 		let update = {
-			departureTime: startStoptime.serviceDay*1000 + startStoptime.scheduledArrival * 1000 + startStoptime.arrivalDelay * 1000,
-			arrivalTime: endStoptime.serviceDay*1000 + endStoptime.scheduledArrival * 1000 + endStoptime.arrivalDelay * 1000,
+			departureTime: startStoptime.serviceDay * 1000 + startStoptime.scheduledArrival * 1000 + startStoptime.arrivalDelay * 1000,
+			arrivalTime: endStoptime.serviceDay * 1000 + endStoptime.scheduledArrival * 1000 + endStoptime.arrivalDelay * 1000,
 			realtime: startStoptime.realtime
 		}
 		if (update.departureTime > update.arrivalTime) {
@@ -56,10 +68,13 @@ let updateStopTime = async (stoptime) => {
 	} else {
 		return stoptime
 	}
+
+
 }
 
 let updateSoonestStopTimes = async (neededStopTimes) => {
-	for(let i = neededStopTimes.length-1; i >= Math.max(neededStopTimes.length-5,0); i--) {
+
+	for (let i = neededStopTimes.length - 1; i >= Math.max(neededStopTimes.length - 5, 0); i--) {
 		let stoptimeToBeUpdated = await neededStopTimes[i];
 		neededStopTimes[i] = updateStopTime(stoptimeToBeUpdated)
 	}
@@ -67,22 +82,24 @@ let updateSoonestStopTimes = async (neededStopTimes) => {
 	updatedStoptimes.sort((a, b) => b.arrivalTime - a.arrivalTime)
 	return updatedStoptimes
 
+
 }
 
 let emitFromCalculatedStoptimes = async (socketIds, connectedSockets, startStop, endStop) => {
 	let neededStopTimes = stopTimes.get(startStop).get(endStop)
 	let updatedStopTimes = await updateSoonestStopTimes(neededStopTimes)
-	while((await updatedStopTimes[updatedStopTimes.length-1]).departureTime <= Date.now()) {
+	while ((await updatedStopTimes[updatedStopTimes.length - 1]).departureTime <= Date.now()) {
 		updatedStopTimes.pop()
 	}
-	if(updatedStopTimes.length > 0) {
-		let latest = updatedStopTimes[updatedStopTimes.length-1]
+	if (updatedStopTimes.length > 0) {
+		let latest = updatedStopTimes[updatedStopTimes.length - 1]
 		stopTimes.get(startStop).set(endStop, updatedStopTimes)
 		socketIds.forEach((socketId) => {
 			let socket = connectedSockets.get(socketId.socketId)
 			socket.emit("updatedStoptime", {...latest, id: socketId.id})
 		})
 	}
+
 }
 
 let getTodayDate = () => {
@@ -128,7 +145,13 @@ let getStoptimesData = async (startStop) => {
     }
   }
 }`
-	return (await runQuery(query)).data
+	try {
+		let result = await runQuery(query);
+		return result.data
+	} catch (e) {
+		throw new Error("Unable to fetch stoptimes data")
+	}
+
 
 }
 
@@ -143,9 +166,13 @@ let getStopsRouteData = async (startStop) => {
     }
   }
 }`
-	let result = await runQuery(query)
-	let routes = result.data.stop.routes
-	return routes;
+	try{
+		let result = await runQuery(query)
+		return result.data.stop.routes
+	} catch (e) {
+		throw new Error("Unable to fetch stop's route data")
+	}
+
 }
 
 let calculateRoutesBetweenStops = (routes, endStop) => {
@@ -166,24 +193,36 @@ let calculateRoutesBetweenStops = (routes, endStop) => {
 	return connectedRoutesIds
 };
 let getRoutesBetweenStops = async (startStop, endStop) => {
-	if(routesBetweenStops.has(startStop)) {
-		if(routesBetweenStops.get(startStop).has(endStop)) {
+	if (routesBetweenStops.has(startStop)) {
+		if (routesBetweenStops.get(startStop).has(endStop)) {
 			return routesBetweenStops.get(startStop).get(endStop)
 		}
 	}
-	let routes = await getStopsRouteData(startStop);
+	let routes = null
+	try{
+		routes = await getStopsRouteData(startStop);
+	} catch (e) {
+		throw e
+	}
+
 	let calculatedRoutes = calculateRoutesBetweenStops(routes, endStop);
-	if(!routesBetweenStops.has(startStop)) {
+	if (!routesBetweenStops.has(startStop)) {
 		routesBetweenStops.set(startStop, new Map())
 	}
-	routesBetweenStops.get(startStop).set(endStop,calculatedRoutes)
+	routesBetweenStops.get(startStop).set(endStop, calculatedRoutes)
 	return calculatedRoutes
 }
 
 let calculateStopTimes = async (stoptimesData, startStop, endStop) => {
 	let stoptimeCollections = stoptimesData.stop.stoptimesForServiceDate
 	let results = []
-	let routeIds = await getRoutesBetweenStops(startStop, endStop)
+	let routeIds = null
+	try{
+		routeIds = await getRoutesBetweenStops(startStop, endStop)
+	} catch (e) {
+		throw e
+	}
+
 	for (let i = 0; i < stoptimeCollections.length; i++) {
 		let stoptimes = stoptimeCollections[i].stoptimes
 		let route = stoptimeCollections[i].pattern.route.gtfsId
@@ -225,9 +264,14 @@ let calculateStopTimes = async (stoptimesData, startStop, endStop) => {
 }
 
 let addToStopTimes = async (stoptimesData, startStop, endStop) => {
-	let newStopTimeList = await calculateStopTimes(stoptimesData, startStop, endStop);
+	let newStopTimeList = null
+	try{
+		newStopTimeList = await calculateStopTimes(stoptimesData, startStop, endStop);
+	} catch (e) {
+		throw e
+	}
 
-	if(!stopTimes.has(startStop)) {
+	if (!stopTimes.has(startStop)) {
 		stopTimes.set(startStop, new Map())
 	}
 	stopTimes.get(startStop).set(endStop, newStopTimeList)
@@ -238,23 +282,33 @@ let emitSingleUpdate = (startStop, endStop, routeSubscribers, connectedSockets) 
 }
 
 let emitUpdate = async (startStop, endStop, stoptimesData, routeSubscribers, connectedSockets) => {
-	try {
-		if (!stopTimesAlreadyCalculated(startStop, endStop)) {
-			if (!stoptimesData) {
+	if (!stopTimesAlreadyCalculated(startStop, endStop)) {
+		if (!stoptimesData) {
+			try{
 				stoptimesData = await getStoptimesData(startStop)
+			} catch (e) {
+				console.log("Error in getStoptimesData, ignoring")
+				return
 			}
-			await addToStopTimes(stoptimesData, startStop, endStop)
+
 		}
-		let socketIds = routeSubscribers.get(startStop).get(endStop)
-		emitFromCalculatedStoptimes(socketIds, connectedSockets, startStop, endStop)
-	} catch (e) {
-		console.warn(e)
-		if(stopTimes.has(startStop)) {
-			if(stopTimes.get(startStop).has(endStop)) {
+		try {
+			await addToStopTimes(stoptimesData, startStop, endStop)
+		} catch (e) {
+			console.log("Error in addToStopTimes, ignoring")
+			return
+		}
+
+	}
+	let socketIds = routeSubscribers.get(startStop).get(endStop)
+	emitFromCalculatedStoptimes(socketIds, connectedSockets, startStop, endStop).catch((e) => {
+		console.log("Error in emitFromCalculatedStoptimes, ignoring")
+		if (stopTimes.has(startStop)) {
+			if (stopTimes.get(startStop).has(endStop)) {
 				stopTimes.get(startStop).delete(endStop)
 			}
 		}
-	}
+	})
 
 }
 

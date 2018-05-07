@@ -49,6 +49,9 @@ export class Situation extends Component {
 			this.labeledStoptimes.sort(this.compareStopTimes)
 		} else {
 			this.labeledStoptimes = this.props.stoptimes.map((stoptime) => {
+				if(stoptime.label && stoptime.label === "NEW") {
+					return stoptime
+				}
 				return {...stoptime, label: "RELEVANT"}
 			})
 		}

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Container from "../CommonComponents/Container";
 import RelevantRouteSituation from "./RelevantRouteSituation";
+import IrrelevantRouteSituation from "./IrrelevantRouteSituation";
 
 
 export default class SituationComponent extends Component {
@@ -13,7 +14,7 @@ export default class SituationComponent extends Component {
 						case "NEW":
 							return null
 						case "IRRELEVANT":
-							return null
+							return <IrrelevantRouteSituation key={stoptime.id} stoptime={stoptime} language={this.props.language}/>
 						case "RELEVANT":
 							return <RelevantRouteSituation key={stoptime.id} stoptime={stoptime} language={this.props.language}/>
 						default:
