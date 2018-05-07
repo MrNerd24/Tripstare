@@ -44,9 +44,9 @@ let getTripStoptimesData = async (stoptime) => {
 
 
 let updateStopTime = async (stoptime) => {
-
+	let stoptimesData = null
 	try{
-		let stoptimesData = await getTripStoptimesData(stoptime);
+		stoptimesData = await getTripStoptimesData(stoptime);
 	} catch (e) {
 		return stoptime
 	}
