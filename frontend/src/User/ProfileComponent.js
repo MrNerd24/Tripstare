@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Container from "../CommonComponents/Container";
 import Card from "../CommonComponents/Card";
-import {Button, Typography} from "material-ui";
+import {Button, Typography} from "@material-ui/core";
 import Selector from "../CommonComponents/Selector";
 import ButtonContainer from "../CommonComponents/ButtonContainer";
 

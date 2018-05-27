@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Snackbar} from "material-ui";
+import {Snackbar} from "@material-ui/core";
 import Store from '../../Store'
 import Actions from '../../Actions'
 import {connect} from "react-redux";

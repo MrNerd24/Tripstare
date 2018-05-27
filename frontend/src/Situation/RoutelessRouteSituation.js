@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Card from "../CommonComponents/Card";
-import Typography from "material-ui/es/Typography/Typography";
+import {Typography} from "@material-ui/core";
 
 export default class RoutelessRouteSituation extends Component {
 

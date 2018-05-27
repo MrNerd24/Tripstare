@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import EditableRoute from "./EditableRoute";
 import {routes} from "../CommonPropTypes";
 import PropTypes from 'prop-types'
-import {Button} from "material-ui";
-import {Add as AddIcon} from 'material-ui-icons'
+import {Button} from "@material-ui/core";
+import {Add as AddIcon} from '@material-ui/icons'
 import Container from "../CommonComponents/Container";
 
 

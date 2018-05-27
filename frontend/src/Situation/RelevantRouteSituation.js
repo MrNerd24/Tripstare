@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Card from "../CommonComponents/Card";
-import {Typography} from "material-ui";
+import {Typography} from "@material-ui/core";
 import Alerts from "./Alerts";
 import StoptimesDao from "../Information/Realtime/StoptimesDao";
 

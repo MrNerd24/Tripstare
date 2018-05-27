@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import AppBarComponent from "./AppBarComponent";
 import Actions from '../Actions'
 import {connect} from "react-redux";
-import {withTheme} from "material-ui";
+import {withTheme} from "@material-ui/core";
 import Store from '../Store'
 
 

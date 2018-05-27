@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {getAlerts} from "../Information/Realtime/Alerts";
-import {Typography} from "material-ui";
+import {Typography} from "@material-ui/core";
 
 
 export default class alerts extends Component {

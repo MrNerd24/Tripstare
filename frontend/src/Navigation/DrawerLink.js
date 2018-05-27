@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Link} from "react-router-dom";
-import {ListItem, ListItemIcon, ListItemText} from "material-ui";
+import {ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 
 
 export default class DrawerLink extends Component {

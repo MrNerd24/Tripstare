@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Typography} from "material-ui";
+import {Button, Typography} from "@material-ui/core";
 import Card from "../CommonComponents/Card";
 import AutoCompleteTextField from "../CommonComponents/AutoCompleteTextField";
 import PropTypes from 'prop-types'

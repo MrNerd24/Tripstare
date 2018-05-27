@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Autosuggest from 'react-autosuggest';
-import {TextField} from "material-ui";
-import {MenuItem, Paper} from "material-ui";
+import {TextField} from "@material-ui/core";
+import {MenuItem, Paper} from "@material-ui/core";
 import PropTypes from 'prop-types'
 
 export default class AutoCompleteTextField extends Component {

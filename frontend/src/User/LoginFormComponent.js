@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Container from "../CommonComponents/Container";
 import Card from "../CommonComponents/Card";
-import {Button, Checkbox, FormControlLabel, TextField, Typography} from "material-ui";
+import {Button, Checkbox, FormControlLabel, TextField, Typography} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import ButtonContainer from "../CommonComponents/ButtonContainer";
 

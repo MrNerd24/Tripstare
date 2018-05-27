@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {Divider, Drawer, List} from "material-ui";
-import {Info as InfoIcon, Directions as DirectionsIcon} from 'material-ui-icons'
+import {Divider, Drawer, List} from "@material-ui/core";
+import {Info as InfoIcon, Directions as DirectionsIcon} from '@material-ui/icons'
 import DrawerLink from "./DrawerLink";
 import DrawerUserLink from "../User/DrawerUserLink";
 

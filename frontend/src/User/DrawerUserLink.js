@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import DrawerLink from "../Navigation/DrawerLink";
-import {Person as ProfileIcon} from 'material-ui-icons'
+import {Person as ProfileIcon} from '@material-ui/icons'
 import Actions from "../Actions";
 import {connect} from "react-redux";
 

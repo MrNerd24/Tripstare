@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Store from './Store'
 import {Provider} from "react-redux";
 import Main from "./Main";
-import {CssBaseline, MuiThemeProvider} from "material-ui";
+import {CssBaseline, MuiThemeProvider} from "@material-ui/core";
 import CustomTheme from "./CustomTheme";
 import {initListeners} from "./Information/Layout/Listeners";
 import {initUser} from "./User/UserFunctions";

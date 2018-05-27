@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {AppBar, IconButton, Toolbar, Typography} from "material-ui";
-import {Menu as MenuIcon} from 'material-ui-icons';
+import {AppBar, IconButton, Toolbar, Typography} from "@material-ui/core";
+import {Menu as MenuIcon} from '@material-ui/icons';
 import {getAppbarHeight} from "./AppBar";
 
 
