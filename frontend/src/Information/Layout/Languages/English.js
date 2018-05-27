@@ -38,7 +38,8 @@ export default {
 	arrivesAt: "Arrives at",
 	timeRemaining: "Time remaining",
 	alerts: "Alerts",
-	atDestination: "At destination"
+	atDestination: "At destination",
+	noRoute: "There are no routes available between these stops. You might have chosen a wrong stop."
 
 
 }

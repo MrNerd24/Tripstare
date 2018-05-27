@@ -29,8 +29,11 @@ let setListeners = (socket) => {
 
 	socket.on('updateTimes', (id) => {
 		if(subscriptions.has(socket.id)) {
-			let {startStop, endStop} = subscriptions.get(socket.id).find((route) => route.id === id)
-			Emitter.emitSingleUpdate(startStop, endStop, routeSubscribers, connectedSockets)
+			let subscription = subscriptions.get(socket.id).find((route) => route.id === id)
+			if(subscription) {
+				let {startStop, endStop} = subscription
+				Emitter.emitSingleUpdate(startStop, endStop, routeSubscribers, connectedSockets)
+			}
 		}
 	})
 }
@@ -39,8 +42,10 @@ let addToSubscriptions = (socketId, startStop, endStop, id) => {
 	if (!subscriptions.has(socketId)) {
 		subscriptions.set(socketId, [])
 	}
-	if(!subscriptions.get(socketId).find((stops) => stops.id === id))
-	subscriptions.get(socketId).push({startStop, endStop, id})
+	if(!subscriptions.get(socketId).find((stops) => stops.id === id)) {
+		subscriptions.get(socketId).push({startStop, endStop, id})
+	}
+
 }
 
 let removeFromSubscriptions = (socketId, id) => {
@@ -65,19 +70,23 @@ let addToRouteSubscribers = (startStop, endStop, socketId, id) => {
 let removeFromRouteSubscribers = (id, socketId) => {
 	if(subscriptions.has(socketId)) {
 		let routes = subscriptions.get(socketId)
-		let {startStop, endStop} = routes.find((route) => route.id === id)
-		if (routeSubscribers.has(startStop)) {
-			if (routeSubscribers.get(startStop).has(endStop)) {
-				let subscribers = routeSubscribers.get(startStop).get(endStop);
-				subscribers.splice(subscribers.findIndex((subscriber) => subscriber.socketId === socketId), 1)
-				if (subscribers.length === 0) {
-					routeSubscribers.get(startStop).delete(endStop)
-					if (routeSubscribers.get(startStop).size === 0) {
-						routeSubscribers.delete(startStop)
+		let route = routes.find((route) => route.id === id)
+		if(route){
+			let {startStop, endStop} = route;
+			if (routeSubscribers.has(startStop)) {
+				if (routeSubscribers.get(startStop).has(endStop)) {
+					let subscribers = routeSubscribers.get(startStop).get(endStop);
+					subscribers.splice(subscribers.findIndex((subscriber) => subscriber.socketId === socketId), 1)
+					if (subscribers.length === 0) {
+						routeSubscribers.get(startStop).delete(endStop)
+						if (routeSubscribers.get(startStop).size === 0) {
+							routeSubscribers.delete(startStop)
+						}
 					}
 				}
 			}
 		}
+
 	}
 
 }

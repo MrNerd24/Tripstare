@@ -47,22 +47,30 @@ export const getConnectedStops = async (gtfsId) => {
 }`
 
 	let result = await runQuery(query)
-	let stops = parseUniqueStopsFromListOfRoutes(result.data.stop.routes).map(formatStop)
+	let stops = parseUniqueStopsFromListOfRoutes(result.data.stop.routes, gtfsId).map(formatStop)
 	connectedStops.set(gtfsId, stops)
 	return stops
 }
 
-export const parseUniqueStopsFromListOfRoutes = (routes) => {
+export const parseUniqueStopsFromListOfRoutes = (routes, startStopId) => {
 	let seenIds = new Set()
 	let stops = []
 
 	for(let i = 0; i < routes.length; i++) {
+		let startStopSeen = false;
 		for(let j = 0; j < routes[i].stops.length; j++) {
 			let stop = routes[i].stops[j]
-			if(!seenIds.has(stop.gtfsId)) {
-				seenIds.add(stop.gtfsId)
-				stops.push(stop)
+			if(startStopSeen) {
+				if(!seenIds.has(stop.gtfsId)) {
+					seenIds.add(stop.gtfsId)
+					stops.push(stop)
+				}
+			} else {
+				if(stop.gtfsId === startStopId) {
+					startStopSeen = true;
+				}
 			}
+
 		}
 	}
 	return stops

@@ -87,18 +87,26 @@ let updateSoonestStopTimes = async (neededStopTimes) => {
 
 let emitFromCalculatedStoptimes = async (socketIds, connectedSockets, startStop, endStop) => {
 	let neededStopTimes = stopTimes.get(startStop).get(endStop)
-	let updatedStopTimes = await updateSoonestStopTimes(neededStopTimes)
-	while ((await updatedStopTimes[updatedStopTimes.length - 1]).departureTime <= Date.now()) {
-		updatedStopTimes.pop()
-	}
-	if (updatedStopTimes.length > 0) {
-		let latest = updatedStopTimes[updatedStopTimes.length - 1]
-		stopTimes.get(startStop).set(endStop, updatedStopTimes)
+	if(neededStopTimes.length > 0) {
+		let updatedStopTimes = await updateSoonestStopTimes(neededStopTimes)
+		while ((await updatedStopTimes[updatedStopTimes.length - 1]).departureTime <= Date.now()) {
+			updatedStopTimes.pop()
+		}
+		if (updatedStopTimes.length > 0) {
+			let latest = updatedStopTimes[updatedStopTimes.length - 1]
+			stopTimes.get(startStop).set(endStop, updatedStopTimes)
+			socketIds.forEach((socketId) => {
+				let socket = connectedSockets.get(socketId.socketId)
+				socket.emit("updatedStoptime", {...latest, id: socketId.id})
+			})
+		}
+	} else {
 		socketIds.forEach((socketId) => {
 			let socket = connectedSockets.get(socketId.socketId)
-			socket.emit("updatedStoptime", {...latest, id: socketId.id})
+			socket.emit("updatedStoptime", {label: "ROUTELESS", startStop, endStop, id: socketId.id})
 		})
 	}
+
 
 }
 
@@ -302,6 +310,7 @@ let emitUpdate = async (startStop, endStop, stoptimesData, routeSubscribers, con
 	}
 	let socketIds = routeSubscribers.get(startStop).get(endStop)
 	emitFromCalculatedStoptimes(socketIds, connectedSockets, startStop, endStop).catch((e) => {
+		console.log(e)
 		console.log("Error in emitFromCalculatedStoptimes, ignoring")
 		if (stopTimes.has(startStop)) {
 			if (stopTimes.get(startStop).has(endStop)) {

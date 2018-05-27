@@ -38,5 +38,6 @@ export default {
 	arrivesAt: "Saapuu kello",
 	timeRemaining: "Aikaa jäljellä",
 	alerts: "Häiriöt",
-	atDestination: "Päätepysäkillä kello"
+	atDestination: "Päätepysäkillä kello",
+	noRoute: "Näiden pysäkkien välillä ei ole reittejä. Valitsit ehkä väärän pysäkin."
 }
